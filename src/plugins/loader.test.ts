@@ -447,6 +447,44 @@ describe("loadOpenClawPlugins", () => {
     expect(entry?.status).toBe("disabled");
   });
 
+  it("warns when an explicitly configured memory slot plugin is missing", () => {
+    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+
+    const registry = loadOpenClawPlugins({
+      cache: false,
+      config: {
+        plugins: {
+          slots: { memory: "memory-core" },
+        },
+      },
+    });
+
+    expect(
+      registry.diagnostics.some((diag) =>
+        diag.message.includes("memory slot plugin not found or not marked as memory"),
+      ),
+    ).toBe(true);
+  });
+
+  it("does not warn for missing default memory slot when slot is not explicitly configured", () => {
+    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
+
+    const registry = loadOpenClawPlugins({
+      cache: false,
+      config: {
+        plugins: {
+          allow: [],
+        },
+      },
+    });
+
+    expect(
+      registry.diagnostics.some((diag) =>
+        diag.message.includes("memory slot plugin not found or not marked as memory"),
+      ),
+    ).toBe(false);
+  });
+
   it("prefers higher-precedence plugins with the same id", () => {
     const bundledDir = makeTempDir();
     writePlugin({

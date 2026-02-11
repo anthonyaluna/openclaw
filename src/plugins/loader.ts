@@ -224,6 +224,9 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
 
   const seenIds = new Map<string, PluginRecord["origin"]>();
   const memorySlot = normalized.slots.memory;
+  const explicitMemorySlotConfigured = Boolean(
+    cfg.plugins?.slots && Object.prototype.hasOwnProperty.call(cfg.plugins.slots, "memory"),
+  );
   let selectedMemoryPluginId: string | null = null;
   let memorySlotMatched = false;
 
@@ -437,7 +440,7 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
     }
   }
 
-  if (typeof memorySlot === "string" && !memorySlotMatched) {
+  if (explicitMemorySlotConfigured && typeof memorySlot === "string" && !memorySlotMatched) {
     registry.diagnostics.push({
       level: "warn",
       message: `memory slot plugin not found or not marked as memory: ${memorySlot}`,

@@ -202,6 +202,32 @@ import {
   WebLoginStartParamsSchema,
   type WebLoginWaitParams,
   WebLoginWaitParamsSchema,
+  type WorkforceActionParams,
+  WorkforceActionParamsSchema,
+  type WorkforceAppfolioWritebackParams,
+  WorkforceAppfolioWritebackParamsSchema,
+  type WorkforceDecisionResolveParams,
+  WorkforceDecisionResolveParamsSchema,
+  type WorkforceDecisionsParams,
+  WorkforceDecisionsParamsSchema,
+  type WorkforceInitParams,
+  WorkforceInitParamsSchema,
+  type WorkforceLedgerParams,
+  WorkforceLedgerParamsSchema,
+  type WorkforceReplayParams,
+  WorkforceReplayParamsSchema,
+  type WorkforceRunsParams,
+  WorkforceRunsParamsSchema,
+  type WorkforceScheduleAddParams,
+  WorkforceScheduleAddParamsSchema,
+  type WorkforceSchedulesParams,
+  WorkforceSchedulesParamsSchema,
+  type WorkforceStatusParams,
+  WorkforceStatusParamsSchema,
+  type WorkforceTickParams,
+  WorkforceTickParamsSchema,
+  type WorkforceWorkspaceParams,
+  WorkforceWorkspaceParamsSchema,
   type WizardCancelParams,
   WizardCancelParamsSchema,
   type WizardNextParams,
@@ -359,6 +385,41 @@ export const validateChatAbortParams = ajv.compile<ChatAbortParams>(ChatAbortPar
 export const validateChatInjectParams = ajv.compile<ChatInjectParams>(ChatInjectParamsSchema);
 export const validateChatEvent = ajv.compile(ChatEventSchema);
 export const validateUpdateRunParams = ajv.compile<UpdateRunParams>(UpdateRunParamsSchema);
+export const validateWorkforceInitParams =
+  ajv.compile<WorkforceInitParams>(WorkforceInitParamsSchema);
+export const validateWorkforceStatusParams = ajv.compile<WorkforceStatusParams>(
+  WorkforceStatusParamsSchema,
+);
+export const validateWorkforceRunsParams =
+  ajv.compile<WorkforceRunsParams>(WorkforceRunsParamsSchema);
+export const validateWorkforceLedgerParams = ajv.compile<WorkforceLedgerParams>(
+  WorkforceLedgerParamsSchema,
+);
+export const validateWorkforceDecisionsParams = ajv.compile<WorkforceDecisionsParams>(
+  WorkforceDecisionsParamsSchema,
+);
+export const validateWorkforceWorkspaceParams = ajv.compile<WorkforceWorkspaceParams>(
+  WorkforceWorkspaceParamsSchema,
+);
+export const validateWorkforceActionParams = ajv.compile<WorkforceActionParams>(
+  WorkforceActionParamsSchema,
+);
+export const validateWorkforceDecisionResolveParams = ajv.compile<WorkforceDecisionResolveParams>(
+  WorkforceDecisionResolveParamsSchema,
+);
+export const validateWorkforceReplayParams = ajv.compile<WorkforceReplayParams>(
+  WorkforceReplayParamsSchema,
+);
+export const validateWorkforceScheduleAddParams = ajv.compile<WorkforceScheduleAddParams>(
+  WorkforceScheduleAddParamsSchema,
+);
+export const validateWorkforceSchedulesParams = ajv.compile<WorkforceSchedulesParams>(
+  WorkforceSchedulesParamsSchema,
+);
+export const validateWorkforceTickParams =
+  ajv.compile<WorkforceTickParams>(WorkforceTickParamsSchema);
+export const validateWorkforceAppfolioWritebackParams =
+  ajv.compile<WorkforceAppfolioWritebackParams>(WorkforceAppfolioWritebackParamsSchema);
 export const validateWebLoginStartParams =
   ajv.compile<WebLoginStartParams>(WebLoginStartParamsSchema);
 export const validateWebLoginWaitParams = ajv.compile<WebLoginWaitParams>(WebLoginWaitParamsSchema);
@@ -485,6 +546,19 @@ export {
   ChatSendParamsSchema,
   ChatInjectParamsSchema,
   UpdateRunParamsSchema,
+  WorkforceInitParamsSchema,
+  WorkforceStatusParamsSchema,
+  WorkforceRunsParamsSchema,
+  WorkforceLedgerParamsSchema,
+  WorkforceDecisionsParamsSchema,
+  WorkforceWorkspaceParamsSchema,
+  WorkforceActionParamsSchema,
+  WorkforceDecisionResolveParamsSchema,
+  WorkforceReplayParamsSchema,
+  WorkforceScheduleAddParamsSchema,
+  WorkforceSchedulesParamsSchema,
+  WorkforceTickParamsSchema,
+  WorkforceAppfolioWritebackParamsSchema,
   TickEventSchema,
   ShutdownEventSchema,
   ProtocolSchemas,
@@ -591,4 +665,17 @@ export type {
   PollParams,
   UpdateRunParams,
   ChatInjectParams,
+  WorkforceInitParams,
+  WorkforceStatusParams,
+  WorkforceRunsParams,
+  WorkforceLedgerParams,
+  WorkforceDecisionsParams,
+  WorkforceWorkspaceParams,
+  WorkforceActionParams,
+  WorkforceDecisionResolveParams,
+  WorkforceReplayParams,
+  WorkforceScheduleAddParams,
+  WorkforceSchedulesParams,
+  WorkforceTickParams,
+  WorkforceAppfolioWritebackParams,
 };

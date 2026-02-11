@@ -1,32 +1,29 @@
 ---
-summary: "Mapping of requested Workforce page names to current OpenClaw surfaces"
+summary: "Navigation map for Workforce pages in Control UI"
 read_when:
-  - You need to map current Control UI tabs to proposed Workforce labels
+  - You need route names and purpose boundaries for Workforce tabs
 title: "Navigation Map"
-status: draft
+status: active
 ---
 
 # Navigation Map
 
-This page maps requested Workforce names to current surfaces in the repository.
+## Workforce routes
 
-## Requested to current mapping
+| Label              | Route                 | Purpose                                                                           |
+| ------------------ | --------------------- | --------------------------------------------------------------------------------- |
+| Workforce          | `/workforce`          | primary operations surface with seats, activity, decisions, and workbench actions |
+| Mission Control    | `/mission-control`    | metrics and health only                                                           |
+| Flight Control     | `/flight-control`     | read-only decision and receipt ledger                                             |
+| Runs               | `/runs`               | read-only run archive and replay entry                                            |
+| AppFolio Workspace | `/appfolio-workspace` | controlled execution with writeback-aware policy gates                            |
 
-| Requested label | Current state | Current surfaces |
-| --- | --- | --- |
-| Chat Hub | Implemented | `ui/src/ui/views/chat.ts`, [WebChat](/web/webchat) |
-| Mission Control | Partial | [Control UI](/web/control-ui) tabs: overview, channels, instances, sessions, usage, cron |
-| Flight Control | Partial | cron, nodes, exec approvals surfaces in Control UI and gateway methods |
-| Runs | Partial | chat run state, sub agent registry, cron run log |
-| AppFolio Workspace | Partial | [Agent workspace](/concepts/agent-workspace), workspace runtime helpers |
+## Legacy and adjacent routes
 
-## Not implemented yet
+- `/chat` remains available for direct session intervention.
+- Existing Control, Agent, and Settings tab groups remain available.
 
-The following are not first class top level pages yet:
+## Related
 
-- Mission Control
-- Flight Control
-- Runs
-- AppFolio Workspace
-
-These labels are planning targets for the Workforce roadmap.
+- [Workforce](/workforce)
+- [Control UI](/web/control-ui)

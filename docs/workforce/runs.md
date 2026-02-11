@@ -1,42 +1,37 @@
 ---
-summary: "Proposed Runs page and unified run envelope requirements"
+summary: "Runs archive and replay workflow for Workforce"
 read_when:
-  - You are working on run tracking across chat, sub agent, and cron flows
+  - You need a consolidated view of Workforce run execution
 title: "Runs"
-status: draft
+status: active
 ---
 
 # Runs
 
-Runs is a proposed top level page for consolidated run tracking.
+Runs is the Workforce run archive page.
 
-## Current state
+## Included data
 
-Run data is currently split across subsystems:
-
-- chat run state in gateway chat runtime
-- sub agent run registry
-- cron run log and history views
-
-Because these models differ, a single runs page is not yet available.
-
-## Required abstraction
-
-A shared run envelope is needed before true consolidation.
-
-Proposed minimum fields:
+Each run envelope includes normalized fields such as:
 
 - `runId`
-- `kind` (`chat`, `subagent`, `cron`)
-- `agentId`
-- `sessionKey`
-- `status`
-- `startedAt`
-- `endedAt`
 - `source`
-- `approvalState`
+- `seatId`
+- `action`
+- `status`
+- `policyDecision`
+- `startedAtMs`
+- `endedAtMs`
+- `decisionId`
 
-## Related architecture work
+## What you can do
 
+- inspect recent run history
+- open replay flow for specific runs
+- correlate runs with decisions and receipts
+
+## Related
+
+- [Workforce](/workforce)
+- [Flight Control](/workforce/flight-control)
 - [Architecture decisions](/workforce/architecture)
-- [Sub Agents](/tools/subagents)

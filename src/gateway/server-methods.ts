@@ -25,6 +25,7 @@ import { usageHandlers } from "./server-methods/usage.js";
 import { voicewakeHandlers } from "./server-methods/voicewake.js";
 import { webHandlers } from "./server-methods/web.js";
 import { wizardHandlers } from "./server-methods/wizard.js";
+import { workforceHandlers } from "./server-methods/workforce.js";
 
 const ADMIN_SCOPE = "operator.admin";
 const READ_SCOPE = "operator.read";
@@ -72,6 +73,12 @@ const READ_METHODS = new Set([
   "node.list",
   "node.describe",
   "chat.history",
+  "workforce.status",
+  "workforce.runs",
+  "workforce.ledger",
+  "workforce.decisions",
+  "workforce.workspace",
+  "workforce.schedules",
 ]);
 const WRITE_METHODS = new Set([
   "send",
@@ -88,6 +95,11 @@ const WRITE_METHODS = new Set([
   "chat.send",
   "chat.abort",
   "browser.request",
+  "workforce.action.execute",
+  "workforce.decision.resolve",
+  "workforce.run.replay",
+  "workforce.tick",
+  "workforce.appfolio.writeback",
 ]);
 
 function authorizeGatewayMethod(method: string, client: GatewayRequestOptions["client"]) {
@@ -155,7 +167,9 @@ function authorizeGatewayMethod(method: string, client: GatewayRequestOptions["c
     method === "sessions.patch" ||
     method === "sessions.reset" ||
     method === "sessions.delete" ||
-    method === "sessions.compact"
+    method === "sessions.compact" ||
+    method === "workforce.init" ||
+    method === "workforce.schedule.add"
   ) {
     return errorShape(ErrorCodes.INVALID_REQUEST, "missing scope: operator.admin");
   }
@@ -170,6 +184,7 @@ export const coreGatewayHandlers: GatewayRequestHandlers = {
   ...channelsHandlers,
   ...chatHandlers,
   ...cronHandlers,
+  ...workforceHandlers,
   ...deviceHandlers,
   ...execApprovalsHandlers,
   ...webHandlers,

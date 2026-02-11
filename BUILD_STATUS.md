@@ -2,56 +2,52 @@
 
 ## Status Summary
 
-- **Overall:** ?? Planning complete; implementation not started.
-- **Confidence:** High for baseline capabilities (multi-agent routing + sub-agents exist), medium for Workforce UX completeness (no first-class surface yet).
-- **Recommended next step:** Start with docs/terminology PR to define Workforce on top of existing primitives.
+- **Overall:** Completed baseline Workforce implementation (UI + gateway + CLI + store).
+- **Date:** February 11, 2026
+- **Confidence:** High for shipped scope; medium for future expansion items (advanced analytics and richer timeline UI).
 
-## Repo Audit Snapshot
+## Shipped Scope
 
-### What exists today
+1. **Dedicated Workforce pages in Control UI**
+   - Tabs and routes: Workforce, Mission Control, Flight Control, Runs, AppFolio Workspace
+   - Files: `ui/src/ui/navigation.ts`, `ui/src/ui/app-render.ts`, `ui/src/ui/views/*`
+2. **Gateway `workforce.*` API namespace**
+   - Added protocol schemas, validators, server handlers, method registry entries
+   - Files: `src/gateway/protocol/schema/workforce.ts`, `src/gateway/server-methods/workforce.ts`, related protocol wiring files
+3. **Persistent Workforce runtime**
+   - Store-backed queues, schedules, runs, decisions, receipts, replay frames, workspace policy
+   - Files: `src/workforce/store.ts`, `src/workforce/service.ts`, `src/workforce/types.ts`
+4. **Workforce CLI**
+   - `openclaw workforce ...` command family for status, runs, decisions, actions, schedules, replay, writeback
+   - File: `src/cli/workforce-cli.ts`
+5. **Scheduler integration**
+   - Gateway background tick for workforce schedules with update broadcasts
+   - File: `src/gateway/server.impl.ts`
+6. **Roster source of truth**
+   - Central typed roster + derived queue/scheduler/UI projections
+   - File: `src/workforce/roster.ts`
+7. **Tests**
+   - Roster, service, and CLI registration coverage
+   - Files: `src/workforce/roster.test.ts`, `src/workforce/service.test.ts`, `src/cli/program/register.subclis.test.ts`
+8. **Autonomy guidance**
+   - Workforce status now exposes queue pressure and actionable next-step guidance for operators and autonomous workflows
 
-1. **Multi-agent core primitives are present**
-   - Routing and bindings implementation + tests in `src/routing/*` and agent command surfaces in `src/commands/agents.*`.
-2. **Sub-agent execution is implemented**
-   - `sessions_spawn` tooling and tests exist in `src/agents/tools/sessions-spawn-tool.ts` and related sub-agent test suites.
-3. **Gateway methods already support agent/session operations**
-   - Server methods for agents/sessions are present in `src/gateway/server-methods/agents.ts` and `src/gateway/server-methods/sessions.ts`.
-4. **Documentation foundation exists**
-   - Conceptual docs for multi-agent routing (`docs/concepts/multi-agent.md`) and sub-agents (`docs/tools/subagents.md`).
-5. **Optional orchestration extension exists**
-   - `extensions/open-prose` exposes plugin-level multi-agent orchestration semantics.
+## Access Points
 
-### What is missing for Workforce
+- **Control UI pages**
+  - `http://127.0.0.1:18789/workforce`
+  - `http://127.0.0.1:18789/mission-control`
+  - `http://127.0.0.1:18789/flight-control`
+  - `http://127.0.0.1:18789/runs`
+  - `http://127.0.0.1:18789/appfolio-workspace`
+- **CLI**
+  - `openclaw workforce status`
+  - `openclaw workforce runs --limit 50`
+  - `openclaw workforce decisions`
+  - `openclaw workforce action <seatId> <action>`
+  - `openclaw workforce schedule-add <seatId> <name> <intervalMs> <action>`
 
-1. **No first-class Workforce artifact**
-   - No `workforce` concept page, how-to, or dedicated CLI command family in current tree.
-2. **No consolidated Workforce status output**
-   - Current status surfaces are agent/session oriented; they do not present topology-level readiness.
-3. **No guided bootstrap workflow**
-   - Users still assemble `agents.list`, `bindings`, and sub-agent settings manually.
-4. **No Workforce-specific guardrail checklist**
-   - Risks like duplicate `agentDir`, missing binding coverage, or cross-agent spawn policy are not grouped into a single operator workflow.
+## Non Blocking Runtime Notes
 
-## Gap Matrix
-
-| Area               | Current State                             | Gap                           | Priority |
-| ------------------ | ----------------------------------------- | ----------------------------- | -------- |
-| Terminology & docs | Strong multi-agent + sub-agent docs       | No Workforce framing/how-to   | P0       |
-| CLI UX             | Agent commands exist                      | No `workforce status/init`    | P0       |
-| Config ergonomics  | Flexible primitives                       | No scaffold/template helper   | P1       |
-| Observability      | `status` and agent/session data available | No topology readiness summary | P1       |
-| Troubleshooting    | Broad docs coverage                       | No Workforce playbook         | P2       |
-
-## Proposed PR Track
-
-- **PR 1:** Workforce docs + cross-links (docs-only)
-- **PR 2:** `openclaw workforce status` (read-only)
-- **PR 3:** `openclaw workforce init` (guided scaffold)
-- **PR 4:** Troubleshooting + optional doctor checks
-
-(See `PLANS.md` for detailed scope and exit criteria.)
-
-## Readiness Decision
-
-- **Go/No-Go for coding:**  **Go** (safe to start with docs and read-only CLI surfaces).
-- **Blocking risks:** none for PR 1; PR 3 requires careful config-write safeguards.
+- `memory slot plugin not found or not marked as memory` indicates a config/plugin mismatch for the configured `memorySlot`, not a Workforce runtime failure.
+- `m365_webhook_base_url_missing` indicates missing `OPENCLAW_M365_WEBHOOK_BASE_URL` in environments where M365 webhook subscription management is enabled.

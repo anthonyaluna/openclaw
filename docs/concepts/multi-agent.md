@@ -9,7 +9,7 @@ status: active
 
 Goal: multiple _isolated_ agents (separate workspace + `agentDir` + sessions), plus multiple channel accounts (e.g. two WhatsApps) in one running Gateway. Inbound is routed to an agent via bindings.
 
-For proposed Workforce information architecture (Mission Control, Flight Control, Runs, AppFolio Workspace), see [Workforce](/workforce).
+For Workforce operations surfaces (Mission Control, Flight Control, Runs, AppFolio Workspace), see [Workforce](/workforce).
 
 ## What is “one agent”?
 

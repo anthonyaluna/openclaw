@@ -1,34 +1,32 @@
 ---
-summary: "Proposed Mission Control page for workforce level visibility"
+summary: "Mission Control metrics surface for Workforce"
 read_when:
-  - You are designing the top level operations view for multiple agents
+  - You want status, health, and workload signals without taking actions
 title: "Mission Control"
-status: draft
+status: active
 ---
 
 # Mission Control
 
-Mission Control is a proposed workforce level overview page.
+Mission Control is the Workforce metrics page.
 
-## Goal
+## Purpose
 
-Provide a single readiness view across:
+Mission Control provides a top-level read of:
 
-- agents and bindings
-- active sessions
-- channel health and routing coverage
-- queue pressure and cron posture
+- gateway online/offline state
+- pending decision count
+- recent activity velocity
+- autonomy mode distribution across roster seats
 
-## Current equivalents
+## Scope
 
-Today this information is spread across existing surfaces:
+- Metrics only
+- No direct mutating actions
+- Use Workforce or AppFolio Workspace tabs for operational actions
 
-- [Control UI](/web/control-ui) tabs
-- [Multi Agent Routing](/concepts/multi-agent)
-- gateway `status` and session views
+## Related
 
-## Current gap
-
-Mission Control does not exist yet as a dedicated page. A future implementation
-should remain read only first and consume existing APIs before adding mutating
-workflows.
+- [Workforce](/workforce)
+- [Flight Control](/workforce/flight-control)
+- [Runs](/workforce/runs)

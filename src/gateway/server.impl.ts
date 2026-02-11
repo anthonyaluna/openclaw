@@ -42,6 +42,7 @@ import { scheduleGatewayUpdateCheck } from "../infra/update-startup.js";
 import { startDiagnosticHeartbeat, stopDiagnosticHeartbeat } from "../logging/diagnostic.js";
 import { createSubsystemLogger, runtimeForLogger } from "../logging/subsystem.js";
 import { runOnboardingWizard } from "../wizard/onboarding.js";
+import { initializeWorkforceStore, tickWorkforceSchedules } from "../workforce/service.js";
 import { startGatewayConfigReloader } from "./config-reload.js";
 import { ExecApprovalManager } from "./exec-approval-manager.js";
 import { NodeRegistry } from "./node-registry.js";
@@ -460,6 +461,29 @@ export async function startGatewayServer(
   let heartbeatRunner = startHeartbeatRunner({ cfg: cfgAtStart });
 
   void cron.start().catch((err) => logCron.error(`failed to start: ${String(err)}`));
+  void initializeWorkforceStore().catch((err) =>
+    log.warn(`workforce: failed to initialize state: ${String(err)}`),
+  );
+  const workforceTickInterval = setInterval(() => {
+    void tickWorkforceSchedules({ actor: "gateway-runner" })
+      .then((result) => {
+        if (result.triggered.length === 0) {
+          return;
+        }
+        broadcast(
+          "workforce.updated",
+          {
+            kind: "scheduler",
+            ts: Date.now(),
+            triggered: result.triggered.length,
+          },
+          { dropIfSlow: true },
+        );
+      })
+      .catch((err) => {
+        log.warn(`workforce: scheduler tick failed: ${String(err)}`);
+      });
+  }, 60_000);
 
   const execApprovalManager = new ExecApprovalManager();
   const execApprovalForwarder = createExecApprovalForwarder();
@@ -627,6 +651,7 @@ export async function startGatewayServer(
       if (diagnosticsEnabled) {
         stopDiagnosticHeartbeat();
       }
+      clearInterval(workforceTickInterval);
       if (skillsRefreshTimer) {
         clearTimeout(skillsRefreshTimer);
         skillsRefreshTimer = null;

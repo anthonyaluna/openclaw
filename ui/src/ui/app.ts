@@ -6,6 +6,7 @@ import type { DevicePairingList } from "./controllers/devices.ts";
 import type { ExecApprovalRequest } from "./controllers/exec-approval.ts";
 import type { ExecApprovalsFile, ExecApprovalsSnapshot } from "./controllers/exec-approvals.ts";
 import type { SkillMessage } from "./controllers/skills.ts";
+import type { WorkforceState } from "./controllers/workforce.ts";
 import type { GatewayBrowserClient, GatewayHelloOk } from "./gateway.ts";
 import type { Tab } from "./navigation.ts";
 import type { ResolvedTheme, ThemeMode } from "./theme.ts";
@@ -27,6 +28,12 @@ import type {
   SkillStatusReport,
   StatusSummary,
   NostrProfile,
+  WorkforceDecision,
+  WorkforceReceipt,
+  WorkforceReplayFrame,
+  WorkforceRun,
+  WorkforceStatus,
+  WorkforceWorkspace,
 } from "./types.ts";
 import type { NostrProfileFormState } from "./views/channels.nostr-profile-form.ts";
 import {
@@ -78,6 +85,14 @@ import {
 } from "./app-tool-stream.ts";
 import { resolveInjectedAssistantIdentity } from "./assistant-identity.ts";
 import { loadAssistantIdentity as loadAssistantIdentityInternal } from "./controllers/assistant-identity.ts";
+import {
+  addWorkforceSchedule,
+  executeWorkforceAction,
+  recordWorkforceWriteback,
+  replayWorkforceRun,
+  resolveWorkforceDecision,
+  tickWorkforce,
+} from "./controllers/workforce.ts";
 import { loadSettings, type UiSettings } from "./storage.ts";
 import { type ChatAttachment, type ChatQueueItem, type CronFormState } from "./ui-types.ts";
 
@@ -106,7 +121,7 @@ function resolveOnboardingMode(): boolean {
 export class OpenClawApp extends LitElement {
   @state() settings: UiSettings = loadSettings();
   @state() password = "";
-  @state() tab: Tab = "chat";
+  @state() tab: Tab = "workforce";
   @state() onboarding = resolveOnboardingMode();
   @state() connected = false;
   @state() theme: ThemeMode = this.settings.theme ?? "system";
@@ -137,6 +152,20 @@ export class OpenClawApp extends LitElement {
   @state() chatQueue: ChatQueueItem[] = [];
   @state() chatAttachments: ChatAttachment[] = [];
   @state() chatManualRefreshInFlight = false;
+  @state() workforceWorkbenchOpen = true;
+  @state() workforceWorkbenchTab: import("./views/workforce.ts").WorkforceWorkbenchTab =
+    "seat-chat";
+  @state() workforcePaletteOpen = false;
+  @state() workforceLoading = false;
+  @state() workforceError: string | null = null;
+  @state() workforceStatus: WorkforceStatus | null = null;
+  @state() workforceRuns: WorkforceRun[] = [];
+  @state() workforceDecisions: WorkforceDecision[] = [];
+  @state() workforceReceipts: WorkforceReceipt[] = [];
+  @state() workforceReplayframes: WorkforceReplayFrame[] = [];
+  @state() workforceWorkspace: WorkforceWorkspace | null = null;
+  @state() workforceLastWritebackReceiptId: string | null = null;
+  @state() workforceSelectedSeatId = "ops-lead";
   // Sidebar state for tool output viewing
   @state() sidebarOpen = false;
   @state() sidebarContent: string | null = null;
@@ -495,8 +524,10 @@ export class OpenClawApp extends LitElement {
     handleNostrProfileToggleAdvancedInternal(this);
   }
 
-  async handleExecApprovalDecision(decision: "allow-once" | "allow-always" | "deny") {
-    const active = this.execApprovalQueue[0];
+  async handleExecApprovalDecision(decision: "allow-once" | "allow-always" | "deny", id?: string) {
+    const active =
+      (id ? this.execApprovalQueue.find((entry) => entry.id === id) : this.execApprovalQueue[0]) ??
+      null;
     if (!active || !this.client || this.execApprovalBusy) {
       return;
     }
@@ -513,6 +544,61 @@ export class OpenClawApp extends LitElement {
     } finally {
       this.execApprovalBusy = false;
     }
+  }
+
+  async handleWorkforceDecisionResolve(decisionId: string, resolution: "allow" | "deny") {
+    await resolveWorkforceDecision(this as unknown as WorkforceState, decisionId, resolution);
+  }
+
+  async handleWorkforceRunReplay(runId: string) {
+    await replayWorkforceRun(this as unknown as WorkforceState, runId);
+  }
+
+  async handleWorkforceTick() {
+    await tickWorkforce(this as unknown as WorkforceState);
+  }
+
+  async handleWorkforceRecordWriteback(note?: string) {
+    const receipt = await recordWorkforceWriteback(this as unknown as WorkforceState, { note });
+    this.workforceLastWritebackReceiptId = receipt?.receiptId ?? null;
+  }
+
+  handleWorkforceSelectSeat(seatId: string) {
+    this.workforceSelectedSeatId = seatId;
+  }
+
+  async handleWorkforceActionExecute(
+    seatId: string,
+    action: string,
+    options?: { requireWritebackReceipt?: boolean; payload?: Record<string, unknown> },
+  ) {
+    await executeWorkforceAction(this as unknown as WorkforceState, {
+      seatId,
+      action,
+      source: "workforce",
+      actor: "control-ui",
+      requireWritebackReceipt:
+        options?.requireWritebackReceipt ?? action.toLowerCase().includes("appfolio"),
+      payload:
+        options?.payload ??
+        (this.workforceLastWritebackReceiptId
+          ? { writebackReceiptId: this.workforceLastWritebackReceiptId }
+          : undefined),
+    });
+  }
+
+  async handleWorkforceScheduleAdd(
+    seatId: string,
+    name: string,
+    intervalMs: number,
+    action: string,
+  ) {
+    await addWorkforceSchedule(this as unknown as WorkforceState, {
+      seatId,
+      name,
+      intervalMs,
+      action,
+    });
   }
 
   handleGatewayUrlConfirm() {

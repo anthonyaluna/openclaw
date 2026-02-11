@@ -20,7 +20,7 @@ import {
   runDaemonUninstall,
 } from "../daemon-cli.js";
 import { withProgress } from "../progress.js";
-import { callGatewayCli, gatewayCallOpts } from "./call.js";
+import { callGatewayCli, gatewayCallOpts, normalizeGatewayRpcOpts } from "./call.js";
 import {
   dedupeBeacons,
   parseDiscoverTimeoutMs,
@@ -203,11 +203,12 @@ export function registerGatewayCli(program: Command) {
       .description("Call a Gateway method")
       .argument("<method>", "Method name (health/status/system-presence/cron.*)")
       .option("--params <json>", "JSON object string for params", "{}")
-      .action(async (method, opts) => {
+      .action(async (method, opts, command) => {
         await runGatewayCommand(async () => {
+          const rpcOpts = normalizeGatewayRpcOpts(opts, command);
           const params = JSON.parse(String(opts.params ?? "{}"));
-          const result = await callGatewayCli(method, opts, params);
-          if (opts.json) {
+          const result = await callGatewayCli(method, rpcOpts, params);
+          if (rpcOpts.json) {
             defaultRuntime.log(JSON.stringify(result, null, 2));
             return;
           }
@@ -225,11 +226,12 @@ export function registerGatewayCli(program: Command) {
       .command("usage-cost")
       .description("Fetch usage cost summary from session logs")
       .option("--days <days>", "Number of days to include", "30")
-      .action(async (opts) => {
+      .action(async (opts, command) => {
         await runGatewayCommand(async () => {
+          const rpcOpts = normalizeGatewayRpcOpts(opts, command);
           const days = parseDaysOption(opts.days);
-          const result = await callGatewayCli("usage.cost", opts, { days });
-          if (opts.json) {
+          const result = await callGatewayCli("usage.cost", rpcOpts, { days });
+          if (rpcOpts.json) {
             defaultRuntime.log(JSON.stringify(result, null, 2));
             return;
           }
@@ -246,10 +248,11 @@ export function registerGatewayCli(program: Command) {
     gateway
       .command("health")
       .description("Fetch Gateway health")
-      .action(async (opts) => {
+      .action(async (opts, command) => {
         await runGatewayCommand(async () => {
-          const result = await callGatewayCli("health", opts);
-          if (opts.json) {
+          const rpcOpts = normalizeGatewayRpcOpts(opts, command);
+          const result = await callGatewayCli("health", rpcOpts);
+          if (rpcOpts.json) {
             defaultRuntime.log(JSON.stringify(result, null, 2));
             return;
           }

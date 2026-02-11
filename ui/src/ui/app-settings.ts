@@ -23,6 +23,13 @@ import { loadPresence } from "./controllers/presence.ts";
 import { loadSessions } from "./controllers/sessions.ts";
 import { loadSkills } from "./controllers/skills.ts";
 import {
+  loadWorkforceDecisions,
+  loadWorkforceLedger,
+  loadWorkforceRuns,
+  loadWorkforceStatus,
+  loadWorkforceWorkspace,
+} from "./controllers/workforce.ts";
+import {
   inferBasePathFromPathname,
   normalizeBasePath,
   normalizePath,
@@ -185,6 +192,15 @@ export async function refreshActiveTab(host: SettingsHost) {
   if (host.tab === "overview") {
     await loadOverview(host);
   }
+  if (
+    host.tab === "workforce" ||
+    host.tab === "mission-control" ||
+    host.tab === "flight-control" ||
+    host.tab === "runs" ||
+    host.tab === "appfolio-workspace"
+  ) {
+    await loadWorkforce(host);
+  }
   if (host.tab === "channels") {
     await loadChannelsTab(host);
   }
@@ -317,7 +333,7 @@ export function syncTabWithLocation(host: SettingsHost, replace: boolean) {
   if (typeof window === "undefined") {
     return;
   }
-  const resolved = tabFromPath(window.location.pathname, host.basePath) ?? "chat";
+  const resolved = tabFromPath(window.location.pathname, host.basePath) ?? "workforce";
   setTabFromRoute(host, resolved);
   syncUrlWithTab(host, resolved, replace);
 }
@@ -428,5 +444,15 @@ export async function loadCron(host: SettingsHost) {
     loadChannels(host as unknown as OpenClawApp, false),
     loadCronStatus(host as unknown as OpenClawApp),
     loadCronJobs(host as unknown as OpenClawApp),
+  ]);
+}
+
+export async function loadWorkforce(host: SettingsHost) {
+  await Promise.all([
+    loadWorkforceStatus(host as unknown as OpenClawApp),
+    loadWorkforceRuns(host as unknown as OpenClawApp),
+    loadWorkforceDecisions(host as unknown as OpenClawApp),
+    loadWorkforceLedger(host as unknown as OpenClawApp),
+    loadWorkforceWorkspace(host as unknown as OpenClawApp),
   ]);
 }

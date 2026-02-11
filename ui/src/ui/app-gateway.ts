@@ -26,6 +26,13 @@ import {
 } from "./controllers/exec-approval.ts";
 import { loadNodes } from "./controllers/nodes.ts";
 import { loadSessions } from "./controllers/sessions.ts";
+import {
+  loadWorkforceDecisions,
+  loadWorkforceLedger,
+  loadWorkforceRuns,
+  loadWorkforceStatus,
+  loadWorkforceWorkspace,
+} from "./controllers/workforce.ts";
 import { GatewayBrowserClient } from "./gateway.ts";
 
 type GatewayHost = {
@@ -253,6 +260,20 @@ function handleGatewayEventUnsafe(host: GatewayHost, evt: GatewayEventFrame) {
     if (resolved) {
       host.execApprovalQueue = removeExecApproval(host.execApprovalQueue, resolved.id);
     }
+  }
+
+  if (
+    evt.event === "workforce.updated" ||
+    evt.event === "workforce.decision.requested" ||
+    evt.event === "workforce.decision.resolved"
+  ) {
+    void Promise.all([
+      loadWorkforceStatus(host as unknown as OpenClawApp),
+      loadWorkforceRuns(host as unknown as OpenClawApp),
+      loadWorkforceDecisions(host as unknown as OpenClawApp),
+      loadWorkforceLedger(host as unknown as OpenClawApp),
+      loadWorkforceWorkspace(host as unknown as OpenClawApp),
+    ]);
   }
 }
 

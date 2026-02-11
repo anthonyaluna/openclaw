@@ -131,6 +131,38 @@ describe("gateway-cli coverage", () => {
     expect(runtimeLogs.join("\n")).toContain('"ok": true');
   }, 60_000);
 
+  it("applies parent gateway credentials to call subcommands", async () => {
+    runtimeLogs.length = 0;
+    runtimeErrors.length = 0;
+    callGateway.mockClear();
+
+    const { registerGatewayCli } = await import("./gateway-cli.js");
+    const program = new Command();
+    program.exitOverride();
+    registerGatewayCli(program);
+
+    await program.parseAsync(
+      [
+        "gateway",
+        "call",
+        "health",
+        "--url",
+        "ws://127.0.0.1:18889",
+        "--token",
+        "token-from-parent",
+        "--json",
+      ],
+      {
+        from: "user",
+      },
+    );
+
+    expect(callGateway).toHaveBeenCalledTimes(1);
+    const args = callGateway.mock.calls[0]?.[0] as { token?: string; url?: string };
+    expect(args.url).toBe("ws://127.0.0.1:18889");
+    expect(args.token).toBe("token-from-parent");
+  }, 60_000);
+
   it("registers gateway probe and routes to gatewayStatusCommand", async () => {
     runtimeLogs.length = 0;
     runtimeErrors.length = 0;

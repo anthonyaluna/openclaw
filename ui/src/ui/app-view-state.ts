@@ -30,10 +30,17 @@ import type {
   SessionsListResult,
   SkillStatusReport,
   StatusSummary,
+  WorkforceDecision,
+  WorkforceReceipt,
+  WorkforceReplayFrame,
+  WorkforceRun,
+  WorkforceStatus,
+  WorkforceWorkspace,
 } from "./types.ts";
 import type { ChatAttachment, ChatQueueItem, CronFormState } from "./ui-types.ts";
 import type { NostrProfileFormState } from "./views/channels.nostr-profile-form.ts";
 import type { SessionLogEntry } from "./views/usage.ts";
+import type { WorkforceWorkbenchTab } from "./views/workforce.ts";
 
 export type AppViewState = {
   settings: UiSettings;
@@ -68,6 +75,19 @@ export type AppViewState = {
   nodesLoading: boolean;
   nodes: Array<Record<string, unknown>>;
   chatNewMessagesBelow: boolean;
+  workforceWorkbenchOpen: boolean;
+  workforceWorkbenchTab: WorkforceWorkbenchTab;
+  workforcePaletteOpen: boolean;
+  workforceLoading: boolean;
+  workforceError: string | null;
+  workforceStatus: WorkforceStatus | null;
+  workforceRuns: WorkforceRun[];
+  workforceDecisions: WorkforceDecision[];
+  workforceReceipts: WorkforceReceipt[];
+  workforceReplayframes: WorkforceReplayFrame[];
+  workforceWorkspace: WorkforceWorkspace | null;
+  workforceLastWritebackReceiptId: string | null;
+  workforceSelectedSeatId: string;
   sidebarOpen: boolean;
   sidebarContent: string | null;
   sidebarError: string | null;
@@ -239,7 +259,29 @@ export type AppViewState = {
   handleNostrProfileSave: () => Promise<void>;
   handleNostrProfileImport: () => Promise<void>;
   handleNostrProfileToggleAdvanced: () => void;
-  handleExecApprovalDecision: (decision: "allow-once" | "allow-always" | "deny") => Promise<void>;
+  handleExecApprovalDecision: (
+    decision: "allow-once" | "allow-always" | "deny",
+    id?: string,
+  ) => Promise<void>;
+  handleWorkforceDecisionResolve: (
+    decisionId: string,
+    resolution: "allow" | "deny",
+  ) => Promise<void>;
+  handleWorkforceRunReplay: (runId: string) => Promise<void>;
+  handleWorkforceTick: () => Promise<void>;
+  handleWorkforceRecordWriteback: (note?: string) => Promise<void>;
+  handleWorkforceSelectSeat: (seatId: string) => void;
+  handleWorkforceActionExecute: (
+    seatId: string,
+    action: string,
+    options?: { requireWritebackReceipt?: boolean; payload?: Record<string, unknown> },
+  ) => Promise<void>;
+  handleWorkforceScheduleAdd: (
+    seatId: string,
+    name: string,
+    intervalMs: number,
+    action: string,
+  ) => Promise<void>;
   handleGatewayUrlConfirm: () => void;
   handleGatewayUrlCancel: () => void;
   handleConfigLoad: () => Promise<void>;

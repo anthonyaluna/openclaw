@@ -13,4 +13,5 @@ export * from "./schema/protocol-schemas.js";
 export * from "./schema/sessions.js";
 export * from "./schema/snapshot.js";
 export * from "./schema/types.js";
+export * from "./schema/workforce.js";
 export * from "./schema/wizard.js";

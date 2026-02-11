@@ -1,32 +1,30 @@
 ---
-summary: "Proposed AppFolio Workspace page and its relationship to existing workspace concepts"
+summary: "AppFolio Workspace controlled execution and writeback guardrails"
 read_when:
-  - You are defining workspace level controls and memory boundaries
+  - You are executing AppFolio-adjacent actions through Workforce
 title: "AppFolio Workspace"
-status: draft
+status: active
 ---
 
 # AppFolio Workspace
 
-AppFolio Workspace is a requested Workforce label for workspace level operating
-surfaces.
+AppFolio Workspace is the controlled execution bay for actions that require stricter policy context.
 
-## Current equivalents
+## Guardrails
 
-Existing workspace foundations already exist:
+- Workspace policy state is loaded through `workforce.workspace`.
+- Actions can require writeback receipt IDs before execution.
+- Policy outcomes are explicit: `allow`, `block`, or `escalate`.
 
-- [Agent workspace](/concepts/agent-workspace)
-- workspace runtime helpers in `src/agents/workspace.ts` and `src/hooks/workspace.ts`
-- macOS workspace UI bits
+## Typical flow
 
-## Current gap
+1. record a writeback receipt
+2. execute a gated action
+3. resolve a generated decision card if escalation is required
+4. review receipt and replay data
 
-There is no first class AppFolio Workspace page today.
+## Related
 
-## Proposed focus
-
-- workspace selection and boundary visibility
-- memory layer inspection by scope
-- policy and access constraints per workspace context
-
-This should remain additive to existing workspace and session behavior.
+- [Workforce](/workforce)
+- [Flight Control](/workforce/flight-control)
+- [Runs](/workforce/runs)

@@ -137,6 +137,14 @@ const entries: SubCliEntry[] = [
     },
   },
   {
+    name: "workforce",
+    description: "Workforce orchestration",
+    register: async (program) => {
+      const mod = await import("../workforce-cli.js");
+      mod.registerWorkforceCli(program);
+    },
+  },
+  {
     name: "dns",
     description: "DNS helpers",
     register: async (program) => {

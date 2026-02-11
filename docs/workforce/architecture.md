@@ -1,63 +1,49 @@
 ---
-summary: "Architecture decisions and constraints for Workforce rollout"
+summary: "Architecture decisions for the Workforce runtime and UI integration"
 read_when:
-  - You are implementing workforce protocol, UI, or policy flows
+  - You are changing Workforce gateway methods, runtime policy, or UI data flow
 title: "Workforce Architecture Decisions"
-status: draft
+status: active
 ---
 
 # Workforce Architecture Decisions
 
-This note captures the initial architecture direction for Workforce work.
+## Decision 1 additive gateway namespace
 
-## Decision 1: additive namespace
+Workforce ships as an additive `workforce.*` gateway namespace and does not replace existing agent/session APIs.
 
-Use an additive `workforce.*` namespace that compiles to existing primitives
-instead of replacing current `agents`, `bindings`, and sub agent settings.
+## Decision 2 normalized run envelope
 
-Why:
+Workforce actions are persisted as normalized run envelopes to support shared archive and replay behavior.
 
-- preserves backward compatibility
-- allows staged rollout
+## Decision 3 explicit policy outcomes
 
-## Decision 2: read only first
+Policy evaluation always returns one of:
 
-Ship observability surfaces before mutating workflows.
+- `allow`
+- `block`
+- `escalate`
 
-Why:
+Escalation creates decision cards with explicit resolution paths.
 
-- lower operational risk
-- enables validation of data model and UX before control actions
+## Decision 4 receipts and replay frames as first class records
 
-## Decision 3: unified run envelope
+Actions emit receipts and replay frames for audit and investigation flows.
 
-Define a shared run envelope that covers chat, sub agent, and cron runs.
+## Decision 5 workspace policy guardrails
 
-Why:
+Workspace-sensitive actions support required writeback receipt checks before execution.
 
-- enables a first class Runs page
-- avoids duplicate adapters per UI surface
+## Decision 6 guidance-first operations
 
-## Decision 4: policy first orchestration
+The runtime computes actionable `nextSteps` from current decisions, blocked runs,
+queue pressure, and due schedules. UI surfaces consume this directly to drive
+operator and autonomous follow-up actions.
 
-Route workforce actions through existing approval and allowlist systems.
+## Implementation references
 
-Why:
-
-- keeps one authorization model
-- preserves existing security posture
-
-## Decision 5: receipt and replay requirements
-
-Treat receipts and replay frames as first class requirements for later phases.
-
-Why:
-
-- improves auditability
-- enables deterministic investigation workflows
-
-## Open questions
-
-- final product naming for Mission Control, Flight Control, and AppFolio Workspace
-- storage target for receipts and replay frames
-- visualization scope for timelines in v1
+- Runtime: `src/workforce/service.ts`
+- Store: `src/workforce/store.ts`
+- Types: `src/workforce/types.ts`
+- Gateway handlers: `src/gateway/server-methods/workforce.ts`
+- Protocol schema: `src/gateway/protocol/schema/workforce.ts`

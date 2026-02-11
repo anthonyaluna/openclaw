@@ -136,6 +136,21 @@ import {
   WizardStatusResultSchema,
   WizardStepSchema,
 } from "./wizard.js";
+import {
+  WorkforceActionParamsSchema,
+  WorkforceAppfolioWritebackParamsSchema,
+  WorkforceDecisionResolveParamsSchema,
+  WorkforceDecisionsParamsSchema,
+  WorkforceInitParamsSchema,
+  WorkforceLedgerParamsSchema,
+  WorkforceReplayParamsSchema,
+  WorkforceRunsParamsSchema,
+  WorkforceScheduleAddParamsSchema,
+  WorkforceSchedulesParamsSchema,
+  WorkforceStatusParamsSchema,
+  WorkforceTickParamsSchema,
+  WorkforceWorkspaceParamsSchema,
+} from "./workforce.js";
 
 export const ProtocolSchemas: Record<string, TSchema> = {
   ConnectParams: ConnectParamsSchema,
@@ -251,6 +266,19 @@ export const ProtocolSchemas: Record<string, TSchema> = {
   ChatInjectParams: ChatInjectParamsSchema,
   ChatEvent: ChatEventSchema,
   UpdateRunParams: UpdateRunParamsSchema,
+  WorkforceInitParams: WorkforceInitParamsSchema,
+  WorkforceStatusParams: WorkforceStatusParamsSchema,
+  WorkforceRunsParams: WorkforceRunsParamsSchema,
+  WorkforceLedgerParams: WorkforceLedgerParamsSchema,
+  WorkforceDecisionsParams: WorkforceDecisionsParamsSchema,
+  WorkforceWorkspaceParams: WorkforceWorkspaceParamsSchema,
+  WorkforceActionParams: WorkforceActionParamsSchema,
+  WorkforceDecisionResolveParams: WorkforceDecisionResolveParamsSchema,
+  WorkforceReplayParams: WorkforceReplayParamsSchema,
+  WorkforceScheduleAddParams: WorkforceScheduleAddParamsSchema,
+  WorkforceSchedulesParams: WorkforceSchedulesParamsSchema,
+  WorkforceTickParams: WorkforceTickParamsSchema,
+  WorkforceAppfolioWritebackParams: WorkforceAppfolioWritebackParamsSchema,
   TickEvent: TickEventSchema,
   ShutdownEvent: ShutdownEventSchema,
 };

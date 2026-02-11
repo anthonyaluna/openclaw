@@ -129,6 +129,21 @@ import type {
   WizardStatusResultSchema,
   WizardStepSchema,
 } from "./wizard.js";
+import type {
+  WorkforceActionParamsSchema,
+  WorkforceAppfolioWritebackParamsSchema,
+  WorkforceDecisionResolveParamsSchema,
+  WorkforceDecisionsParamsSchema,
+  WorkforceInitParamsSchema,
+  WorkforceLedgerParamsSchema,
+  WorkforceReplayParamsSchema,
+  WorkforceRunsParamsSchema,
+  WorkforceScheduleAddParamsSchema,
+  WorkforceSchedulesParamsSchema,
+  WorkforceStatusParamsSchema,
+  WorkforceTickParamsSchema,
+  WorkforceWorkspaceParamsSchema,
+} from "./workforce.js";
 
 export type ConnectParams = Static<typeof ConnectParamsSchema>;
 export type HelloOk = Static<typeof HelloOkSchema>;
@@ -236,5 +251,20 @@ export type ChatAbortParams = Static<typeof ChatAbortParamsSchema>;
 export type ChatInjectParams = Static<typeof ChatInjectParamsSchema>;
 export type ChatEvent = Static<typeof ChatEventSchema>;
 export type UpdateRunParams = Static<typeof UpdateRunParamsSchema>;
+export type WorkforceInitParams = Static<typeof WorkforceInitParamsSchema>;
+export type WorkforceStatusParams = Static<typeof WorkforceStatusParamsSchema>;
+export type WorkforceRunsParams = Static<typeof WorkforceRunsParamsSchema>;
+export type WorkforceLedgerParams = Static<typeof WorkforceLedgerParamsSchema>;
+export type WorkforceDecisionsParams = Static<typeof WorkforceDecisionsParamsSchema>;
+export type WorkforceWorkspaceParams = Static<typeof WorkforceWorkspaceParamsSchema>;
+export type WorkforceActionParams = Static<typeof WorkforceActionParamsSchema>;
+export type WorkforceDecisionResolveParams = Static<typeof WorkforceDecisionResolveParamsSchema>;
+export type WorkforceReplayParams = Static<typeof WorkforceReplayParamsSchema>;
+export type WorkforceScheduleAddParams = Static<typeof WorkforceScheduleAddParamsSchema>;
+export type WorkforceSchedulesParams = Static<typeof WorkforceSchedulesParamsSchema>;
+export type WorkforceTickParams = Static<typeof WorkforceTickParamsSchema>;
+export type WorkforceAppfolioWritebackParams = Static<
+  typeof WorkforceAppfolioWritebackParamsSchema
+>;
 export type TickEvent = Static<typeof TickEventSchema>;
 export type ShutdownEvent = Static<typeof ShutdownEventSchema>;

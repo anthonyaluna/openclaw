@@ -772,3 +772,131 @@ export type LogEntry = {
   message?: string | null;
   meta?: Record<string, unknown> | null;
 };
+
+export type WorkforceSeatRuntime = {
+  id: string;
+  label: string;
+  autonomyMode: "manual" | "supervised" | "autonomous";
+  queueId: string;
+  status: "idle" | "running" | "blocked";
+  owner: string;
+  lastRunAtMs?: number;
+};
+
+export type WorkforceQueue = {
+  id: string;
+  seatId: string;
+  name: string;
+  priority: "low" | "normal" | "high";
+  concurrency: number;
+  backpressurePolicy: "drop-oldest" | "drop-newest" | "block";
+  slaMinutes: number;
+  pending: number;
+};
+
+export type WorkforceSchedule = {
+  id: string;
+  seatId: string;
+  name: string;
+  triggerType: "cron" | "event" | "manual";
+  spec: string;
+  enabled: boolean;
+  intervalMs?: number;
+  maxConcurrentRuns: number;
+  nextRunAtMs?: number;
+  lastRunAtMs?: number;
+  action: string;
+};
+
+export type WorkforceRun = {
+  runId: string;
+  source: "chat" | "subagent" | "cron" | "workforce";
+  seatId: string;
+  action: string;
+  status: "queued" | "running" | "ok" | "error" | "blocked" | "escalated";
+  startedAtMs: number;
+  endedAtMs?: number;
+  summary?: string;
+  error?: string;
+  artifacts: string[];
+};
+
+export type WorkforceDecision = {
+  decisionId: string;
+  runId?: string;
+  seatId: string;
+  title: string;
+  summary: string;
+  recommended: "allow" | "deny";
+  riskLevel: "low" | "medium" | "high";
+  requiresApproval: boolean;
+  status: "pending" | "resolved";
+  createdAtMs: number;
+  expiresAtMs: number;
+  resolvedAtMs?: number;
+  resolvedBy?: string;
+  resolution?: "allow" | "deny";
+};
+
+export type WorkforceReceipt = {
+  receiptId: string;
+  runId?: string;
+  decisionId?: string;
+  actor: string;
+  action: string;
+  outcome: string;
+  ts: number;
+  artifacts: string[];
+  signature?: string;
+};
+
+export type WorkforceReplayFrame = {
+  frameId: string;
+  runId: string;
+  seq: number;
+  eventType: string;
+  payloadRef?: string;
+  stateDelta?: string;
+  ts: number;
+  source: "chat" | "subagent" | "cron" | "workforce";
+};
+
+export type WorkforceWorkspace = {
+  appfolioWritebackEnforced: boolean;
+  defaultChannel: "appfolio";
+  commsRules: string[];
+};
+
+export type WorkforceGuidanceStep = {
+  id: string;
+  title: string;
+  detail: string;
+  priority: "high" | "medium" | "low";
+  seatId?: string;
+  action?: string;
+  requireWritebackReceipt?: boolean;
+};
+
+export type WorkforceStatus = {
+  updatedAtMs: number;
+  readiness: "ready" | "degraded";
+  seats: WorkforceSeatRuntime[];
+  queues: WorkforceQueue[];
+  schedules: WorkforceSchedule[];
+  nextSteps: WorkforceGuidanceStep[];
+  summary: {
+    seats: number;
+    queues: number;
+    schedules: number;
+    pendingDecisions: number;
+    running: number;
+    blocked: number;
+    recentRuns24h: number;
+    autonomy: {
+      autonomous: number;
+      supervised: number;
+      manual: number;
+    };
+    queuesPressured: number;
+  };
+};

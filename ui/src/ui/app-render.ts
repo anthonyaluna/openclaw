@@ -63,20 +63,25 @@ const debouncedLoadUsage = (state: UsageState) => {
   usageDateDebounceTimeout = window.setTimeout(() => void loadUsage(state), 400);
 };
 import { renderAgents } from "./views/agents.ts";
+import { renderAppfolioWorkspace } from "./views/appfolio-workspace.ts";
 import { renderChannels } from "./views/channels.ts";
 import { renderChat } from "./views/chat.ts";
 import { renderConfig } from "./views/config.ts";
 import { renderCron } from "./views/cron.ts";
 import { renderDebug } from "./views/debug.ts";
 import { renderExecApprovalPrompt } from "./views/exec-approval.ts";
+import { renderFlightControl } from "./views/flight-control.ts";
 import { renderGatewayUrlConfirmation } from "./views/gateway-url-confirmation.ts";
 import { renderInstances } from "./views/instances.ts";
 import { renderLogs } from "./views/logs.ts";
+import { renderMissionControl } from "./views/mission-control.ts";
 import { renderNodes } from "./views/nodes.ts";
 import { renderOverview } from "./views/overview.ts";
+import { renderRunsArchive } from "./views/runs-archive.ts";
 import { renderSessions } from "./views/sessions.ts";
 import { renderSkills } from "./views/skills.ts";
 import { renderUsage } from "./views/usage.ts";
+import { renderWorkforce } from "./views/workforce.ts";
 
 const AVATAR_DATA_RE = /^data:/i;
 const AVATAR_HTTP_RE = /^https?:\/\//i;
@@ -207,6 +212,113 @@ export function renderApp(state: AppViewState) {
             ${isChat ? renderChatControls(state) : nothing}
           </div>
         </section>
+
+        ${
+          state.tab === "workforce"
+            ? renderWorkforce({
+                status: state.workforceStatus,
+                runs: state.workforceRuns,
+                decisions: state.workforceDecisions,
+                receipts: state.workforceReceipts,
+                replayframes: state.workforceReplayframes,
+                workspace: state.workforceWorkspace,
+                selectedSeatId: state.workforceSelectedSeatId,
+                workbenchOpen: state.workforceWorkbenchOpen,
+                activeWorkbenchTab: state.workforceWorkbenchTab,
+                paletteOpen: state.workforcePaletteOpen,
+                error: state.workforceError,
+                lastWritebackReceiptId: state.workforceLastWritebackReceiptId,
+                onToggleWorkbench: () => {
+                  state.workforceWorkbenchOpen = !state.workforceWorkbenchOpen;
+                },
+                onSelectWorkbenchTab: (tab) => {
+                  state.workforceWorkbenchTab = tab;
+                },
+                onSelectSeat: (seatId) => {
+                  state.handleWorkforceSelectSeat(seatId);
+                },
+                onTogglePalette: () => {
+                  state.workforcePaletteOpen = !state.workforcePaletteOpen;
+                },
+                onPaletteAction: (action) => {
+                  state.workforcePaletteOpen = false;
+                  if (action === "engineering") {
+                    state.workforceWorkbenchTab = "engineering";
+                    state.workforceWorkbenchOpen = true;
+                  }
+                  if (action === "decisions") {
+                    state.workforceWorkbenchTab = "decisions";
+                    state.workforceWorkbenchOpen = true;
+                  }
+                  if (action === "standup") {
+                    void state.handleWorkforceActionExecute("ops-lead", "standup:start");
+                  }
+                  if (action === "retro") {
+                    void state.handleWorkforceActionExecute("ops-lead", "retro:start");
+                  }
+                },
+                onDecisionResolve: (decisionId, resolution) => {
+                  void state.handleWorkforceDecisionResolve(decisionId, resolution);
+                },
+                onReplayRun: (runId) => void state.handleWorkforceRunReplay(runId),
+                onExecuteAction: (seatId, action, options) =>
+                  void state.handleWorkforceActionExecute(seatId, action, options),
+                onTick: () => void state.handleWorkforceTick(),
+                onRecordWriteback: () =>
+                  void state.handleWorkforceRecordWriteback("AppFolio comms writeback"),
+                onAddSchedule: (seatId, name, intervalMs, action) =>
+                  void state.handleWorkforceScheduleAdd(seatId, name, intervalMs, action),
+              })
+            : nothing
+        }
+
+        ${
+          state.tab === "mission-control"
+            ? renderMissionControl({
+                connected: state.connected,
+                status: state.workforceStatus,
+              })
+            : nothing
+        }
+
+        ${
+          state.tab === "flight-control"
+            ? renderFlightControl({
+                receipts: state.workforceReceipts,
+                decisions: state.workforceDecisions,
+              })
+            : nothing
+        }
+
+        ${
+          state.tab === "runs"
+            ? renderRunsArchive({
+                runs: state.workforceRuns,
+                onReplayRun: (runId) => void state.handleWorkforceRunReplay(runId),
+              })
+            : nothing
+        }
+
+        ${
+          state.tab === "appfolio-workspace"
+            ? renderAppfolioWorkspace({
+                workspace: state.workforceWorkspace,
+                lastWritebackReceiptId: state.workforceLastWritebackReceiptId,
+                onOpenInWorkforce: () => {
+                  state.setTab("workforce");
+                  state.workforceWorkbenchOpen = true;
+                  state.workforceWorkbenchTab = "conversations";
+                  state.handleWorkforceSelectSeat("queue-manager");
+                },
+                onRecordWriteback: () =>
+                  void state.handleWorkforceRecordWriteback("Workspace writeback"),
+                onExecuteCommsAction: (action) =>
+                  void state.handleWorkforceActionExecute("queue-manager", action, {
+                    requireWritebackReceipt: true,
+                  }),
+              })
+            : nothing
+        }
 
         ${
           state.tab === "overview"

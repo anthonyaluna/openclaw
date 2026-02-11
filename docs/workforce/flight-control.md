@@ -1,35 +1,30 @@
 ---
-summary: "Proposed Flight Control page for orchestration actions and approvals"
+summary: "Flight Control read-only ledger for Workforce decisions and receipts"
 read_when:
-  - You are defining operational controls for workforce runs and policies
+  - You are auditing decisions, overrides, and execution outcomes
 title: "Flight Control"
-status: draft
+status: active
 ---
 
 # Flight Control
 
-Flight Control is a proposed operations page for active orchestration and
-control actions.
+Flight Control is the Workforce audit ledger page.
 
-## Goal
+## Purpose
 
-Provide operator controls for:
+Flight Control shows:
 
-- scheduling and triggering runs
-- dispatch and queue controls
-- approvals and escalation flow
-- policy gate visibility
+- decision requests and outcomes
+- execution receipts
+- command and host context for reviewed actions
 
-## Current equivalents
+## Scope
 
-Today this is distributed across:
+- Read-only ledger view
+- No queue mutation from this page
+- Use Workforce tab for action execution and decision handling
 
-- cron UI and gateway cron methods
-- node controls
-- exec approval controls
+## Related
 
-## Current gap
-
-Flight Control is not implemented as a first class page. A later phase should
-reuse existing approval and allowlist gates rather than introducing parallel
-policy systems.
+- [Workforce](/workforce)
+- [Runs](/workforce/runs)

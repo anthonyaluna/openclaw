@@ -1,5 +1,161 @@
 @import "./chat.css";
 
+.workforce {
+  display: grid;
+  gap: 12px;
+}
+
+.workforce-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(340px, 1fr);
+  gap: 12px;
+}
+
+.workforce-canvas,
+.workforce-activity,
+.workforce-workbench {
+  min-height: 180px;
+}
+
+.workforce-seats {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 8px;
+}
+
+.workforce-seat {
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.workforce-seat:hover {
+  border-color: var(--brand-500);
+}
+
+.workforce-seat__name {
+  font-weight: 600;
+}
+
+.workforce-seat__meta,
+.workforce-seat__mode {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.workforce-activity-list {
+  margin-top: 8px;
+  display: grid;
+  gap: 8px;
+  max-height: 360px;
+  overflow: auto;
+}
+
+.workforce-activity-item {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  border-radius: var(--radius-md);
+  padding: 9px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: left;
+}
+
+.workforce-activity-item--decision {
+  border-color: var(--warn);
+}
+
+.workbench-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.workbench-tabs {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.workbench-body {
+  margin-top: 10px;
+}
+
+.chip--active {
+  border-color: var(--brand-500);
+}
+
+.decision-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  background: var(--bg-elevated);
+}
+
+.decision-card__title {
+  font-weight: 600;
+}
+
+.decision-card__cmd {
+  margin-top: 8px;
+  white-space: pre-wrap;
+}
+
+.decision-card__actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.workforce-palette-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 0.35);
+  z-index: 50;
+}
+
+.workforce-palette {
+  position: fixed;
+  left: 50%;
+  top: 18%;
+  transform: translateX(-50%);
+  width: min(640px, calc(100vw - 24px));
+  z-index: 51;
+}
+
+.workforce-palette-actions {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+@media (max-width: 1100px) {
+  .workforce-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .workforce-seats {
+    grid-template-columns: 1fr;
+  }
+
+  .workforce-palette-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ===========================================
    Cards - Refined with depth
    =========================================== */
