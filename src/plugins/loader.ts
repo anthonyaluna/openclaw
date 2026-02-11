@@ -440,7 +440,14 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
     }
   }
 
-  if (explicitMemorySlotConfigured && typeof memorySlot === "string" && !memorySlotMatched) {
+  // Avoid noisy diagnostics when config explicitly repeats the default memory slot
+  // but bundled memory plugins are unavailable in the current runtime.
+  const shouldWarnMissingExplicitMemorySlot =
+    explicitMemorySlotConfigured &&
+    typeof memorySlot === "string" &&
+    !memorySlotMatched &&
+    memorySlot !== "memory-core";
+  if (shouldWarnMissingExplicitMemorySlot) {
     registry.diagnostics.push({
       level: "warn",
       message: `memory slot plugin not found or not marked as memory: ${memorySlot}`,

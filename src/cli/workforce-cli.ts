@@ -293,6 +293,10 @@ export function registerWorkforceCli(program: Command) {
       .option("--actor <actor>", "Actor name", "operator")
       .option("--source <source>", "chat|subagent|cron|workforce", "workforce")
       .option("--require-writeback-receipt", "Require writeback receipt", false)
+      .option(
+        "--no-auto-writeback",
+        "Disable auto-recording of a writeback receipt when one is required",
+      )
       .option("--writeback-receipt-id <id>", "Receipt ID for AppFolio writeback")
       .option("--json", "Output JSON", false)
       .action(
@@ -303,18 +307,26 @@ export function registerWorkforceCli(program: Command) {
             actor?: string;
             source?: "chat" | "subagent" | "cron" | "workforce";
             requireWritebackReceipt?: boolean;
+            autoWriteback?: boolean;
             writebackReceiptId?: string;
           },
         ) => {
-          const payload = opts.writebackReceiptId
-            ? { writebackReceiptId: opts.writebackReceiptId }
-            : undefined;
+          const requiresWriteback = Boolean(opts.requireWritebackReceipt);
+          let writebackReceiptId = opts.writebackReceiptId?.trim() || undefined;
+          if (requiresWriteback && !writebackReceiptId && opts.autoWriteback !== false) {
+            const writeback = (await callGatewayFromCli("workforce.appfolio.writeback", opts, {
+              actor: opts.actor,
+              note: `Auto writeback for action: ${action}`,
+            })) as { receipt?: { receiptId?: string } };
+            writebackReceiptId = writeback.receipt?.receiptId?.trim() || undefined;
+          }
+          const payload = writebackReceiptId ? { writebackReceiptId } : undefined;
           const result = await callGatewayFromCli("workforce.action.execute", opts, {
             seatId,
             action,
             actor: opts.actor,
             source: opts.source,
-            requireWritebackReceipt: Boolean(opts.requireWritebackReceipt),
+            requireWritebackReceipt: requiresWriteback,
             payload,
           });
           if (printJsonIfRequested(opts, result)) {

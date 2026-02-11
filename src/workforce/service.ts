@@ -495,7 +495,7 @@ function collectNextSteps(store: WorkforceStoreFile): WorkforceGuidanceStep[] {
     });
   }
 
-  const blockedRun = store.runs.toReversed().find((entry) => entry.status === "blocked");
+  const blockedRun = unresolvedBlockedRuns(store).toReversed()[0];
   if (blockedRun) {
     const needsWriteback = blockedRun.summary === "appfolio_writeback_receipt_required";
     steps.push({
@@ -554,11 +554,33 @@ function collectNextSteps(store: WorkforceStoreFile): WorkforceGuidanceStep[] {
   return steps.slice(0, 6);
 }
 
+function unresolvedBlockedRuns(store: WorkforceStoreFile): WorkforceRunEnvelope[] {
+  const latestOkByAction = new Map<string, number>();
+  for (const run of store.runs) {
+    if (run.status !== "ok") {
+      continue;
+    }
+    const key = `${run.seatId}:${run.action}`;
+    const prev = latestOkByAction.get(key) ?? 0;
+    if (run.startedAtMs > prev) {
+      latestOkByAction.set(key, run.startedAtMs);
+    }
+  }
+  return store.runs.filter((run) => {
+    if (run.status !== "blocked") {
+      return false;
+    }
+    const key = `${run.seatId}:${run.action}`;
+    const latestOkAt = latestOkByAction.get(key);
+    return typeof latestOkAt !== "number" || latestOkAt <= run.startedAtMs;
+  });
+}
+
 function buildStatus(store: WorkforceStoreFile): WorkforceStatus {
   const now = nowMs();
   const pendingDecisions = store.decisions.filter((entry) => entry.status === "pending").length;
   const running = store.runs.filter((entry) => entry.status === "running").length;
-  const blocked = store.runs.filter((entry) => entry.status === "blocked").length;
+  const blocked = unresolvedBlockedRuns(store).length;
   const recentRuns24h = store.runs.filter((entry) => now - entry.startedAtMs <= DAY_MS).length;
   const autonomous = store.seats.filter((seat) => seat.autonomyMode === "autonomous").length;
   const supervised = store.seats.filter((seat) => seat.autonomyMode === "supervised").length;

@@ -182,10 +182,9 @@ export function renderWorkforce(props: WorkforceProps) {
           <div class="card-title">Live Activity</div>
           <div class="card-sub">Policy decisions, recent runs, and prioritized next steps.</div>
           <div class="workforce-activity-list">
-            ${(props.status?.nextSteps ?? []).map(
-              (step) => {
-                const requiresWriteback = Boolean(step.requireWritebackReceipt);
-                return html`
+            ${(props.status?.nextSteps ?? []).map((step) => {
+              const requiresWriteback = Boolean(step.requireWritebackReceipt);
+              return html`
                   <div class="workforce-activity-item workforce-activity-item--decision">
                     <span>
                       <span class="${priorityClass(step.priority)}">${step.priority}</span>
@@ -197,9 +196,11 @@ export function renderWorkforce(props: WorkforceProps) {
                         ? html`
                             <button
                               class="btn btn-subtle"
-                              title=${requiresWriteback
-                                ? "This action requires a writeback receipt (auto recorded when missing)."
-                                : "Execute action"}
+                              title=${
+                                requiresWriteback
+                                  ? "This action requires a writeback receipt (auto recorded when missing)."
+                                  : "Execute action"
+                              }
                               @click=${() =>
                                 props.onExecuteAction(step.seatId!, step.action!, {
                                   requireWritebackReceipt: requiresWriteback,
@@ -212,8 +213,7 @@ export function renderWorkforce(props: WorkforceProps) {
                     }
                   </div>
                 `;
-              },
-            )}
+            })}
             ${pendingDecisions.map(
               (item) => html`
                 <button

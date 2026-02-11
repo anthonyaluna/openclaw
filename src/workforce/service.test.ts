@@ -120,6 +120,43 @@ describe("workforce service", () => {
     expect(status.nextSteps.some((step) => step.id === "clear-blocked-run")).toBe(true);
   });
 
+  it("clears blocked status after the same action succeeds later", async () => {
+    const storePath = makeStorePath();
+    await initializeWorkforceStore({ storePath, force: true });
+
+    const blocked = await executeWorkforceAction({
+      storePath,
+      input: {
+        seatId: "queue-manager",
+        action: "appfolio.comms.broadcast.owner-update",
+        requireWritebackReceipt: true,
+        payload: {},
+      },
+    });
+    expect(blocked.policy).toBe("block");
+
+    const writeback = await recordAppfolioWritebackReceipt({
+      storePath,
+      actor: "test",
+      note: "writeback complete",
+    });
+
+    const allowed = await executeWorkforceAction({
+      storePath,
+      input: {
+        seatId: "queue-manager",
+        action: "appfolio.comms.broadcast.owner-update",
+        requireWritebackReceipt: true,
+        payload: { writebackReceiptId: writeback.receiptId },
+      },
+    });
+    expect(allowed.policy).toBe("allow");
+
+    const status = await getWorkforceStatus({ storePath });
+    expect(status.summary.blocked).toBe(0);
+    expect(status.nextSteps.some((step) => step.id === "clear-blocked-run")).toBe(false);
+  });
+
   it("resolves decisions and updates run outcome", async () => {
     const storePath = makeStorePath();
     await initializeWorkforceStore({ storePath, force: true });
