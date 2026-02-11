@@ -15,6 +15,8 @@ The Control UI is a small **Vite + Lit** single-page app served by the Gateway:
 
 It speaks **directly to the Gateway WebSocket** on the same port.
 
+For proposed Workforce naming and page mapping on top of existing Control UI tabs, see [Workforce Navigation Map](/workforce/nav-map).
+
 ## Quick open (local)
 
 If the Gateway is running on the same computer, open:

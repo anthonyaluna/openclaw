@@ -926,6 +926,18 @@
                 "pages": ["concepts/multi-agent", "concepts/presence"]
               },
               {
+                "group": "Workforce",
+                "pages": [
+                  "workforce/index",
+                  "workforce/nav-map",
+                  "workforce/mission-control",
+                  "workforce/flight-control",
+                  "workforce/runs",
+                  "workforce/workspace",
+                  "workforce/architecture"
+                ]
+              },
+              {
                 "group": "Messages and delivery",
                 "pages": [
                   "concepts/messages",
