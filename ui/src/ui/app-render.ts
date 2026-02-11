@@ -63,20 +63,25 @@ const debouncedLoadUsage = (state: UsageState) => {
   usageDateDebounceTimeout = window.setTimeout(() => void loadUsage(state), 400);
 };
 import { renderAgents } from "./views/agents.ts";
+import { renderAppfolioWorkspace } from "./views/appfolio-workspace.ts";
 import { renderChannels } from "./views/channels.ts";
 import { renderChat } from "./views/chat.ts";
 import { renderConfig } from "./views/config.ts";
 import { renderCron } from "./views/cron.ts";
 import { renderDebug } from "./views/debug.ts";
 import { renderExecApprovalPrompt } from "./views/exec-approval.ts";
+import { renderFlightControl } from "./views/flight-control.ts";
 import { renderGatewayUrlConfirmation } from "./views/gateway-url-confirmation.ts";
 import { renderInstances } from "./views/instances.ts";
 import { renderLogs } from "./views/logs.ts";
+import { renderMissionControl } from "./views/mission-control.ts";
 import { renderNodes } from "./views/nodes.ts";
 import { renderOverview } from "./views/overview.ts";
+import { renderRunsArchive } from "./views/runs-archive.ts";
 import { renderSessions } from "./views/sessions.ts";
 import { renderSkills } from "./views/skills.ts";
 import { renderUsage } from "./views/usage.ts";
+import { renderWorkforce } from "./views/workforce.ts";
 
 const AVATAR_DATA_RE = /^data:/i;
 const AVATAR_HTTP_RE = /^https?:\/\//i;
@@ -207,6 +212,88 @@ export function renderApp(state: AppViewState) {
             ${isChat ? renderChatControls(state) : nothing}
           </div>
         </section>
+
+        ${
+          state.tab === "workforce"
+            ? renderWorkforce({
+                eventLog: state.eventLog,
+                decisions: state.execApprovalQueue,
+                workbenchOpen: state.workforceWorkbenchOpen,
+                activeWorkbenchTab: state.workforceWorkbenchTab,
+                paletteOpen: state.workforcePaletteOpen,
+                onToggleWorkbench: () => {
+                  state.workforceWorkbenchOpen = !state.workforceWorkbenchOpen;
+                },
+                onSelectWorkbenchTab: (tab) => {
+                  state.workforceWorkbenchTab = tab;
+                },
+                onTogglePalette: () => {
+                  state.workforcePaletteOpen = !state.workforcePaletteOpen;
+                },
+                onPaletteAction: (action) => {
+                  state.workforcePaletteOpen = false;
+                  if (action === "engineering") {
+                    state.workforceWorkbenchTab = "engineering";
+                    state.workforceWorkbenchOpen = true;
+                  }
+                  if (action === "decisions") {
+                    state.workforceWorkbenchTab = "decisions";
+                    state.workforceWorkbenchOpen = true;
+                  }
+                  if (action === "standup" || action === "retro") {
+                    state.eventLog = [
+                      ...state.eventLog,
+                      {
+                        ts: Date.now(),
+                        event:
+                          action === "standup"
+                            ? "workforce.standup.started"
+                            : "workforce.retro.started",
+                      },
+                    ].slice(-400);
+                  }
+                },
+                onDecision: async (decision) => {
+                  await state.handleExecApprovalDecision(
+                    decision === "allow-once" ? "allow-once" : "deny",
+                  );
+                },
+              })
+            : nothing
+        }
+
+        ${
+          state.tab === "mission-control"
+            ? renderMissionControl({
+                connected: state.connected,
+                pendingDecisions: state.execApprovalQueue.length,
+                eventsPerMinute: Math.min(
+                  120,
+                  state.eventLog.filter((e) => Date.now() - e.ts < 60_000).length,
+                ),
+              })
+            : nothing
+        }
+
+        ${
+          state.tab === "flight-control"
+            ? renderFlightControl({ decisions: state.execApprovalQueue })
+            : nothing
+        }
+
+        ${state.tab === "runs" ? renderRunsArchive({ eventLog: state.eventLog }) : nothing}
+
+        ${
+          state.tab === "appfolio-workspace"
+            ? renderAppfolioWorkspace({
+                onOpenInWorkforce: () => {
+                  state.setTab("workforce");
+                  state.workforceWorkbenchOpen = true;
+                  state.workforceWorkbenchTab = "conversations";
+                },
+              })
+            : nothing
+        }
 
         ${
           state.tab === "overview"

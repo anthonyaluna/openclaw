@@ -1,6 +1,10 @@
 import type { IconName } from "./icons.js";
 
 export const TAB_GROUPS = [
+  {
+    label: "Workforce",
+    tabs: ["workforce", "mission-control", "flight-control", "runs", "appfolio-workspace"],
+  },
   { label: "Chat", tabs: ["chat"] },
   {
     label: "Control",
@@ -11,6 +15,11 @@ export const TAB_GROUPS = [
 ] as const;
 
 export type Tab =
+  | "workforce"
+  | "mission-control"
+  | "flight-control"
+  | "runs"
+  | "appfolio-workspace"
   | "agents"
   | "overview"
   | "channels"
@@ -26,6 +35,11 @@ export type Tab =
   | "logs";
 
 const TAB_PATHS: Record<Tab, string> = {
+  workforce: "/workforce",
+  "mission-control": "/mission-control",
+  "flight-control": "/flight-control",
+  runs: "/runs",
+  "appfolio-workspace": "/appfolio-workspace",
   agents: "/agents",
   overview: "/overview",
   channels: "/channels",
@@ -95,7 +109,7 @@ export function tabFromPath(pathname: string, basePath = ""): Tab | null {
     normalized = "/";
   }
   if (normalized === "/") {
-    return "chat";
+    return "workforce";
   }
   return PATH_TO_TAB.get(normalized) ?? null;
 }
@@ -124,6 +138,16 @@ export function inferBasePathFromPathname(pathname: string): string {
 
 export function iconForTab(tab: Tab): IconName {
   switch (tab) {
+    case "workforce":
+      return "layoutGrid";
+    case "mission-control":
+      return "barChart";
+    case "flight-control":
+      return "scrollText";
+    case "runs":
+      return "fileText";
+    case "appfolio-workspace":
+      return "monitor";
     case "agents":
       return "folder";
     case "chat":
@@ -157,6 +181,16 @@ export function iconForTab(tab: Tab): IconName {
 
 export function titleForTab(tab: Tab) {
   switch (tab) {
+    case "workforce":
+      return "Workforce";
+    case "mission-control":
+      return "Mission Control";
+    case "flight-control":
+      return "Flight Control";
+    case "runs":
+      return "Runs";
+    case "appfolio-workspace":
+      return "AppFolio Workspace";
     case "agents":
       return "Agents";
     case "overview":
@@ -190,6 +224,16 @@ export function titleForTab(tab: Tab) {
 
 export function subtitleForTab(tab: Tab) {
   switch (tab) {
+    case "workforce":
+      return "Operate seats, intervene, approve decisions, and run engineering workflows.";
+    case "mission-control":
+      return "Metrics and health only.";
+    case "flight-control":
+      return "Read-only decision and override audit ledger.";
+    case "runs":
+      return "Archive and forensic search only.";
+    case "appfolio-workspace":
+      return "Controlled AppFolio execution bay with enforced writeback context.";
     case "agents":
       return "Manage agent workspaces, tools, and identities.";
     case "overview":

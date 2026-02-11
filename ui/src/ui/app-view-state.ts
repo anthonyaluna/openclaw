@@ -34,6 +34,7 @@ import type {
 import type { ChatAttachment, ChatQueueItem, CronFormState } from "./ui-types.ts";
 import type { NostrProfileFormState } from "./views/channels.nostr-profile-form.ts";
 import type { SessionLogEntry } from "./views/usage.ts";
+import type { WorkforceWorkbenchTab } from "./views/workforce.ts";
 
 export type AppViewState = {
   settings: UiSettings;
@@ -68,6 +69,9 @@ export type AppViewState = {
   nodesLoading: boolean;
   nodes: Array<Record<string, unknown>>;
   chatNewMessagesBelow: boolean;
+  workforceWorkbenchOpen: boolean;
+  workforceWorkbenchTab: WorkforceWorkbenchTab;
+  workforcePaletteOpen: boolean;
   sidebarOpen: boolean;
   sidebarContent: string | null;
   sidebarError: string | null;

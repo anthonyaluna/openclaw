@@ -26,6 +26,11 @@ describe("iconForTab", () => {
   });
 
   it("returns stable icons for known tabs", () => {
+    expect(iconForTab("workforce")).toBe("layoutGrid");
+    expect(iconForTab("mission-control")).toBe("barChart");
+    expect(iconForTab("flight-control")).toBe("scrollText");
+    expect(iconForTab("runs")).toBe("fileText");
+    expect(iconForTab("appfolio-workspace")).toBe("monitor");
     expect(iconForTab("chat")).toBe("messageSquare");
     expect(iconForTab("overview")).toBe("barChart");
     expect(iconForTab("channels")).toBe("link");
@@ -56,6 +61,7 @@ describe("titleForTab", () => {
   });
 
   it("returns expected titles", () => {
+    expect(titleForTab("workforce")).toBe("Workforce");
     expect(titleForTab("chat")).toBe("Chat");
     expect(titleForTab("overview")).toBe("Overview");
     expect(titleForTab("cron")).toBe("Cron Jobs");
@@ -71,6 +77,7 @@ describe("subtitleForTab", () => {
   });
 
   it("returns descriptive subtitles", () => {
+    expect(subtitleForTab("workforce")).toContain("Operate seats");
     expect(subtitleForTab("chat")).toContain("chat session");
     expect(subtitleForTab("config")).toContain("openclaw.json");
   });
@@ -115,6 +122,7 @@ describe("normalizePath", () => {
 
 describe("pathForTab", () => {
   it("returns correct path without base", () => {
+    expect(pathForTab("workforce")).toBe("/workforce");
     expect(pathForTab("chat")).toBe("/chat");
     expect(pathForTab("overview")).toBe("/overview");
   });
@@ -127,13 +135,14 @@ describe("pathForTab", () => {
 
 describe("tabFromPath", () => {
   it("returns tab for valid path", () => {
+    expect(tabFromPath("/workforce")).toBe("workforce");
     expect(tabFromPath("/chat")).toBe("chat");
     expect(tabFromPath("/overview")).toBe("overview");
     expect(tabFromPath("/sessions")).toBe("sessions");
   });
 
   it("returns chat for root path", () => {
-    expect(tabFromPath("/")).toBe("chat");
+    expect(tabFromPath("/")).toBe("workforce");
   });
 
   it("handles base paths", () => {
@@ -175,6 +184,7 @@ describe("inferBasePathFromPathname", () => {
 describe("TAB_GROUPS", () => {
   it("contains all expected groups", () => {
     const labels = TAB_GROUPS.map((g) => g.label);
+    expect(labels).toContain("Workforce");
     expect(labels).toContain("Chat");
     expect(labels).toContain("Control");
     expect(labels).toContain("Agent");

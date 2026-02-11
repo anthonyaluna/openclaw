@@ -2,50 +2,53 @@
 
 ## Current state
 
-- Requested Workforce pages are **not implemented as first-class pages** yet:
-  - Mission Control: missing
-  - Flight Control: missing
-  - Runs: missing (only distributed run views/state)
-  - AppFolio Workspace: missing
-- Existing, relevant foundations are strong:
-  - Chat surfaces: web + iOS/macOS + Android
-  - Control UI tab architecture + controllers/views
-  - Run-capable subsystems: chat, sub-agent, cron
-  - Approval pipeline: exec approval request/resolve, UI + gateway handlers
-  - Workspace and memory primitives already exist
+- ✅ Workforce-first navigation now exists in Control UI with dedicated pages:
+  - Workforce
+  - Mission Control
+  - Flight Control
+  - Runs
+  - AppFolio Workspace
+- ✅ Workforce page has the required interaction shell:
+  - Office Canvas (left)
+  - Live Activity feed (right)
+  - Workbench (bottom/openable)
+- ✅ Workbench tabs are present:
+  - Seat Chat, Team Chat, Internal Chats, Conversations, Decisions, Replay, Memory, Engineering
+- ✅ Command palette is wired to Cmd/Ctrl+K and supports key actions.
+- ✅ Inline Decision Cards are visible in Workforce Workbench using existing exec approval queue.
+- ✅ New roster source-of-truth added at `src/workforce/roster.ts` and wired into Workforce seat rendering.
 
-## Mapped equivalents in repo
+## Enforcement and separation status
 
-- Chat/Hub equivalent: `chat` tab (`ui/src/ui/views/chat.ts`) + `docs/web/webchat.md`
-- Mission Control equivalent (partial): control tabs in `ui/src/ui/navigation.ts`
-- Flight Control equivalent (partial): `cron`, `nodes`, `exec approvals`
-- Runs equivalent (partial):
-  - `src/gateway/server-chat.ts`
-  - `src/agents/subagent-registry.ts`
-  - `src/cron/run-log.ts`
-- Workspace equivalent (partial):
-  - `docs/concepts/agent-workspace.md`
-  - `src/agents/workspace.ts`
+- ✅ Mission Control is metrics-only in current UI implementation.
+- ✅ Flight Control is read-only audit-style ledger view.
+- ✅ Runs page is archive/read-only event history surface.
+- ✅ AppFolio Workspace page exists as controlled execution bay entry surface.
+- ⚠️ Deep runtime policy engine, autonomous queues/schedules, replay receipts, and AppFolio writeback enforcement are not fully implemented yet in this PR; this PR establishes page separation + primary UX shell.
 
-## Hard blockers
+## What shipped in this change
 
-1. No agreed page taxonomy/name mapping for requested labels.
-2. No unified run envelope across chat/subagent/cron.
-3. No `workforce.*` protocol namespace for consolidated fetches.
-4. No first-class receipt/replayframe persistence layer.
+1. Workforce nav and route model updates (`ui/src/ui/navigation.ts`).
+2. Workforce page and subpages:
+   - `ui/src/ui/views/workforce.ts`
+   - `ui/src/ui/views/mission-control.ts`
+   - `ui/src/ui/views/flight-control.ts`
+   - `ui/src/ui/views/runs-archive.ts`
+   - `ui/src/ui/views/appfolio-workspace.ts`
+3. Workforce rendering integration in `ui/src/ui/app-render.ts`.
+4. Workforce UI state additions in:
+   - `ui/src/ui/app-view-state.ts`
+   - `ui/src/ui/app.ts`
+5. Workforce styling in `ui/src/styles/components.css`.
+6. Workforce icon support in `ui/src/ui/icons.ts`.
+7. Navigation tests updated for new tabs in `ui/src/ui/navigation.test.ts`.
+8. Roster source-of-truth in `src/workforce/roster.ts`.
 
-## Missing dependencies / decisions
+## Next PR
 
-- Product naming decision for Mission Control / Flight Control / AppFolio Workspace.
-- Decision on timeline visualization approach (existing lit components only vs adding a chart/timeline dependency).
-- Decision on storage target for receipts/replayframes (reuse session transcript storage vs new store).
-
-## Next PR (first PR only)
-
-**PR-A: Workforce information architecture + docs baseline (docs-only)**
-
-- Document the Workforce page taxonomy and explicit mapping to current surfaces.
-- Define canonical data model names (seats, queues, schedules, decision cards, receipts, replayframes, memory layers).
-- Add architecture decision note for unified run envelope and policy gates.
-- Publish milestone roadmap and constraints.
-- Keep scope strictly docs-only: no runtime changes.
+- Implement runtime workforce core:
+  - strict autonomy engine (`FullAutonomy`, `RequestApproval`, `Observe`)
+  - persistent seat queues + schedules + patrol/retro runners
+  - policy engine (`Allow`/`Block`/`Escalate`) with hard boundaries
+  - receipts + replayframes emission and one-click replay
+  - AppFolio writeback enforcement for comms

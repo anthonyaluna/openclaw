@@ -106,7 +106,7 @@ function resolveOnboardingMode(): boolean {
 export class OpenClawApp extends LitElement {
   @state() settings: UiSettings = loadSettings();
   @state() password = "";
-  @state() tab: Tab = "chat";
+  @state() tab: Tab = "workforce";
   @state() onboarding = resolveOnboardingMode();
   @state() connected = false;
   @state() theme: ThemeMode = this.settings.theme ?? "system";
@@ -137,6 +137,10 @@ export class OpenClawApp extends LitElement {
   @state() chatQueue: ChatQueueItem[] = [];
   @state() chatAttachments: ChatAttachment[] = [];
   @state() chatManualRefreshInFlight = false;
+  @state() workforceWorkbenchOpen = true;
+  @state() workforceWorkbenchTab: import("./views/workforce.ts").WorkforceWorkbenchTab =
+    "seat-chat";
+  @state() workforcePaletteOpen = false;
   // Sidebar state for tool output viewing
   @state() sidebarOpen = false;
   @state() sidebarContent: string | null = null;
