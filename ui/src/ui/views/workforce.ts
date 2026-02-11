@@ -183,30 +183,36 @@ export function renderWorkforce(props: WorkforceProps) {
           <div class="card-sub">Policy decisions, recent runs, and prioritized next steps.</div>
           <div class="workforce-activity-list">
             ${(props.status?.nextSteps ?? []).map(
-              (step) => html`
-                <div class="workforce-activity-item workforce-activity-item--decision">
-                  <span>
-                    <span class="${priorityClass(step.priority)}">${step.priority}</span>
-                    ${step.title}
-                    <div class="card-sub">${step.detail}</div>
-                  </span>
-                  ${
-                    step.seatId && step.action
-                      ? html`
-                          <button
-                            class="btn btn-subtle"
-                            @click=${() =>
-                              props.onExecuteAction(step.seatId!, step.action!, {
-                                requireWritebackReceipt: Boolean(step.requireWritebackReceipt),
-                              })}
-                          >
-                            Run
-                          </button>
-                        `
-                      : null
-                  }
-                </div>
-              `,
+              (step) => {
+                const requiresWriteback = Boolean(step.requireWritebackReceipt);
+                return html`
+                  <div class="workforce-activity-item workforce-activity-item--decision">
+                    <span>
+                      <span class="${priorityClass(step.priority)}">${step.priority}</span>
+                      ${step.title}
+                      <div class="card-sub">${step.detail}</div>
+                    </span>
+                    ${
+                      step.seatId && step.action
+                        ? html`
+                            <button
+                              class="btn btn-subtle"
+                              title=${requiresWriteback
+                                ? "This action requires a writeback receipt (auto recorded when missing)."
+                                : "Execute action"}
+                              @click=${() =>
+                                props.onExecuteAction(step.seatId!, step.action!, {
+                                  requireWritebackReceipt: requiresWriteback,
+                                })}
+                            >
+                              ${requiresWriteback ? "Run (writeback)" : "Run"}
+                            </button>
+                          `
+                        : null
+                    }
+                  </div>
+                `;
+              },
             )}
             ${pendingDecisions.map(
               (item) => html`

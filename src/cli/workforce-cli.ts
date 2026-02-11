@@ -84,6 +84,25 @@ function renderWorkforceStatus(payload: WorkforceStatusResult) {
   }
 }
 
+function renderNextStepsOnly(payload: WorkforceStatusResult) {
+  const rich = isRich();
+  const steps = payload.nextSteps ?? [];
+  if (steps.length === 0) {
+    defaultRuntime.log("No next steps available.");
+    return;
+  }
+  defaultRuntime.log(colorize(rich, theme.heading, "Workforce Next Steps"));
+  for (const step of steps) {
+    defaultRuntime.log(`- [${step.priority ?? "medium"}] ${step.title ?? "Step"}`);
+    if (step.detail) {
+      defaultRuntime.log(`  ${step.detail}`);
+    }
+    if (step.seatId && step.action) {
+      defaultRuntime.log(`  action: openclaw workforce action ${step.seatId} ${step.action}`);
+    }
+  }
+}
+
 export function registerWorkforceCli(program: Command) {
   const workforce = program
     .command("workforce")
@@ -131,6 +150,24 @@ export function registerWorkforceCli(program: Command) {
 
   addGatewayClientOptions(
     workforce
+      .command("next-steps")
+      .description("Show actionable workforce next steps")
+      .option("--json", "Output JSON", false)
+      .action(async (opts: GatewayRpcOpts) => {
+        const result = (await callGatewayFromCli(
+          "workforce.status",
+          opts,
+          {},
+        )) as WorkforceStatusResult;
+        if (printJsonIfRequested(opts, result.nextSteps ?? [])) {
+          return;
+        }
+        renderNextStepsOnly(result);
+      }),
+  );
+
+  addGatewayClientOptions(
+    workforce
       .command("runs")
       .description("List workforce runs")
       .option("--limit <n>", "Number of runs", "100")
@@ -164,6 +201,54 @@ export function registerWorkforceCli(program: Command) {
           limit: toNumber(opts.limit, 100),
           status: opts.status,
         });
+        if (printJsonIfRequested(opts, result)) {
+          return;
+        }
+        defaultRuntime.log(JSON.stringify(result, null, 2));
+      }),
+  );
+
+  addGatewayClientOptions(
+    workforce
+      .command("schedules")
+      .description("List workforce schedules")
+      .option("--limit <n>", "Number of schedules", "200")
+      .option("--json", "Output JSON", false)
+      .action(async (opts: GatewayRpcOpts & { limit?: string }) => {
+        const result = await callGatewayFromCli("workforce.schedules", opts, {
+          limit: toNumber(opts.limit, 200),
+        });
+        if (printJsonIfRequested(opts, result)) {
+          return;
+        }
+        defaultRuntime.log(JSON.stringify(result, null, 2));
+      }),
+  );
+
+  addGatewayClientOptions(
+    workforce
+      .command("ledger")
+      .description("List receipts, replay frames, and decisions")
+      .option("--limit <n>", "Number of ledger entries", "200")
+      .option("--json", "Output JSON", false)
+      .action(async (opts: GatewayRpcOpts & { limit?: string }) => {
+        const result = await callGatewayFromCli("workforce.ledger", opts, {
+          limit: toNumber(opts.limit, 200),
+        });
+        if (printJsonIfRequested(opts, result)) {
+          return;
+        }
+        defaultRuntime.log(JSON.stringify(result, null, 2));
+      }),
+  );
+
+  addGatewayClientOptions(
+    workforce
+      .command("workspace")
+      .description("Show AppFolio workspace policy state")
+      .option("--json", "Output JSON", false)
+      .action(async (opts: GatewayRpcOpts) => {
+        const result = await callGatewayFromCli("workforce.workspace", opts, {});
         if (printJsonIfRequested(opts, result)) {
           return;
         }

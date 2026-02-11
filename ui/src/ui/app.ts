@@ -572,18 +572,40 @@ export class OpenClawApp extends LitElement {
     action: string,
     options?: { requireWritebackReceipt?: boolean; payload?: Record<string, unknown> },
   ) {
+    const requiresWriteback =
+      options?.requireWritebackReceipt ?? action.toLowerCase().includes("appfolio");
+    let payload: Record<string, unknown> | undefined =
+      options?.payload ??
+      (this.workforceLastWritebackReceiptId
+        ? { writebackReceiptId: this.workforceLastWritebackReceiptId }
+        : undefined);
+
+    if (requiresWriteback) {
+      const currentReceiptId =
+        typeof payload?.writebackReceiptId === "string"
+          ? payload.writebackReceiptId.trim()
+          : undefined;
+      if (!currentReceiptId) {
+        const receipt = await recordWorkforceWriteback(this as unknown as WorkforceState, {
+          note: `Auto writeback for action: ${action}`,
+        });
+        if (receipt?.receiptId) {
+          this.workforceLastWritebackReceiptId = receipt.receiptId;
+          payload = {
+            ...payload,
+            writebackReceiptId: receipt.receiptId,
+          };
+        }
+      }
+    }
+
     await executeWorkforceAction(this as unknown as WorkforceState, {
       seatId,
       action,
       source: "workforce",
       actor: "control-ui",
-      requireWritebackReceipt:
-        options?.requireWritebackReceipt ?? action.toLowerCase().includes("appfolio"),
-      payload:
-        options?.payload ??
-        (this.workforceLastWritebackReceiptId
-          ? { writebackReceiptId: this.workforceLastWritebackReceiptId }
-          : undefined),
+      requireWritebackReceipt: requiresWriteback,
+      payload,
     });
   }
 

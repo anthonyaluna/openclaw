@@ -151,6 +151,17 @@
     grid-template-columns: 1fr;
   }
 
+  .workforce-activity-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .workbench-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
   .workforce-palette-actions {
     grid-template-columns: 1fr;
   }
