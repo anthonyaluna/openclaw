@@ -15,6 +15,7 @@ AppFolio Workspace is the controlled execution bay for actions that require stri
 - Workspace policy state is loaded through `workforce.workspace`.
 - Actions can require writeback receipt IDs before execution.
 - Policy outcomes are explicit: `allow`, `block`, or `escalate`.
+- Workspace policy profile defaults to `balanced` and can trigger stricter profiles by action class (for example deploy and security actions).
 
 ## Typical flow
 

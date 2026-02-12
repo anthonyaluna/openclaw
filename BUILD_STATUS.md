@@ -4,7 +4,7 @@
 
 - **Overall:** Completed baseline Workforce implementation (UI + gateway + CLI + store).
 - **Date:** February 11, 2026
-- **Confidence:** High for shipped scope; medium for future expansion items (advanced analytics and richer timeline UI).
+- **Confidence:** High for shipped scope including expanded analytics, timeline views, and policy profiles.
 
 ## Shipped Scope
 
@@ -31,6 +31,10 @@
    - Files: `src/workforce/roster.test.ts`, `src/workforce/service.test.ts`, `src/cli/program/register.subclis.test.ts`
 8. **Autonomy guidance**
    - Workforce status now exposes queue pressure and actionable next-step guidance for operators and autonomous workflows
+9. **Expanded analytics and policy profile layer**
+   - Mission Control includes policy outcome and risk analytics plus lagging schedule signal
+   - Flight Control and Runs include hourly timeline buckets
+   - Runtime supports additional policy profiles (`balanced`, `strict-change-control`, `autonomous-ops`)
 
 ## Access Points
 

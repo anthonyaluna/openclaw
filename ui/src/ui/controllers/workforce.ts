@@ -1,5 +1,6 @@
 import type { GatewayBrowserClient } from "../gateway.ts";
 import type {
+  AppfolioReportsProbeResult,
   WorkforceDecision,
   WorkforceReceipt,
   WorkforceReplayFrame,
@@ -19,6 +20,8 @@ export type WorkforceState = {
   workforceReceipts: WorkforceReceipt[];
   workforceReplayframes: WorkforceReplayFrame[];
   workforceWorkspace: WorkforceWorkspace | null;
+  workforceAppfolioProbeLoading: boolean;
+  workforceAppfolioProbeResult: AppfolioReportsProbeResult | null;
 };
 
 export async function loadWorkforceStatus(state: WorkforceState) {
@@ -245,5 +248,26 @@ export async function recordWorkforceWriteback(
   } catch (err) {
     state.workforceError = String(err);
     return null;
+  }
+}
+
+export async function probeWorkforceAppfolioReports(state: WorkforceState) {
+  if (!state.client || !state.connected || state.workforceAppfolioProbeLoading) {
+    return null;
+  }
+  state.workforceAppfolioProbeLoading = true;
+  state.workforceError = null;
+  try {
+    const res = await state.client.request<AppfolioReportsProbeResult>(
+      "workforce.appfolio.reports.probe",
+      {},
+    );
+    state.workforceAppfolioProbeResult = res;
+    return res;
+  } catch (err) {
+    state.workforceError = String(err);
+    return null;
+  } finally {
+    state.workforceAppfolioProbeLoading = false;
   }
 }

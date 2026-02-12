@@ -108,7 +108,7 @@ export function renderWorkforce(props: WorkforceProps) {
       }}
       tabindex="0"
     >
-      <section class="grid grid-cols-4">
+      <section class="grid grid-cols-5">
         <article class="stat-card stat">
           <div class="stat-label">Readiness</div>
           <div class="stat-value ${props.status?.readiness === "degraded" ? "warn" : "ok"}">${props.status?.readiness ?? "unknown"}</div>
@@ -124,6 +124,10 @@ export function renderWorkforce(props: WorkforceProps) {
         <article class="stat-card stat">
           <div class="stat-label">Runs (24h)</div>
           <div class="stat-value">${summary?.recentRuns24h ?? 0}</div>
+        </article>
+        <article class="stat-card stat">
+          <div class="stat-label">Policy profile</div>
+          <div class="stat-value">${props.workspace?.policyProfile ?? "balanced"}</div>
         </article>
       </section>
 
@@ -241,7 +245,10 @@ export function renderWorkforce(props: WorkforceProps) {
                     props.onSelectWorkbenchTab("replay");
                   }}
                 >
-                  <span>${run.action}</span>
+                  <span>
+                    ${run.action}
+                    <div class="card-sub">${run.policyProfile}  ${run.policyDecision}  ${run.riskLevel}</div>
+                  </span>
                   <span class="mono">${run.status}</span>
                 </button>
               `,

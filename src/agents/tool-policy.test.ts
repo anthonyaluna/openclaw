@@ -17,12 +17,14 @@ describe("tool-policy", () => {
   it("resolves known profiles and ignores unknown ones", () => {
     const coding = resolveToolProfilePolicy("coding");
     expect(coding?.allow).toContain("group:fs");
+    expect(coding?.allow).toContain("workforce");
     expect(resolveToolProfilePolicy("nope")).toBeUndefined();
   });
 
   it("includes core tool groups in group:openclaw", () => {
     const group = TOOL_GROUPS["group:openclaw"];
     expect(group).toContain("browser");
+    expect(group).toContain("workforce");
     expect(group).toContain("message");
     expect(group).toContain("session_status");
   });

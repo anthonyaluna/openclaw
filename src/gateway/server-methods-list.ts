@@ -90,6 +90,7 @@ const BASE_METHODS = [
   "workforce.schedules",
   "workforce.tick",
   "workforce.appfolio.writeback",
+  "workforce.appfolio.reports.probe",
   "system-presence",
   "system-event",
   "send",

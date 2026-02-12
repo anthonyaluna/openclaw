@@ -304,6 +304,8 @@ export function renderApp(state: AppViewState) {
             ? renderAppfolioWorkspace({
                 workspace: state.workforceWorkspace,
                 lastWritebackReceiptId: state.workforceLastWritebackReceiptId,
+                probeLoading: state.workforceAppfolioProbeLoading,
+                probeResult: state.workforceAppfolioProbeResult,
                 onOpenInWorkforce: () => {
                   state.setTab("workforce");
                   state.workforceWorkbenchOpen = true;
@@ -312,10 +314,32 @@ export function renderApp(state: AppViewState) {
                 },
                 onRecordWriteback: () =>
                   void state.handleWorkforceRecordWriteback("Workspace writeback"),
+                onProbeReportsApi: () => void state.handleWorkforceAppfolioProbe(),
                 onExecuteCommsAction: (action) =>
                   void state.handleWorkforceActionExecute("queue-manager", action, {
                     requireWritebackReceipt: true,
                   }),
+                onRunReportPreset: (presetId) =>
+                  void state.handleWorkforceActionExecute(
+                    presetId === "work_order" ? "scheduler" : "queue-manager",
+                    `appfolio.report.run:${presetId}`,
+                    { requireWritebackReceipt: false },
+                  ),
+                onInstallReportSchedules: () => void state.handleWorkforceInstallReportSchedules(),
+                onRunSmartBillDaily: () =>
+                  void state.handleWorkforceActionExecute(
+                    "queue-manager",
+                    "appfolio.workflow.run:smart_bill_daily",
+                    {
+                      requireWritebackReceipt: false,
+                      payload: {
+                        includeRows: true,
+                        rowLimit: 5000,
+                      },
+                    },
+                  ),
+                onInstallSmartBillDailySchedule: () =>
+                  void state.handleWorkforceInstallSmartBillDailySchedule(),
               })
             : nothing
         }

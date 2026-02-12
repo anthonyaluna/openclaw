@@ -204,6 +204,8 @@ import {
   WebLoginWaitParamsSchema,
   type WorkforceActionParams,
   WorkforceActionParamsSchema,
+  type WorkforceAppfolioReportsProbeParams,
+  WorkforceAppfolioReportsProbeParamsSchema,
   type WorkforceAppfolioWritebackParams,
   WorkforceAppfolioWritebackParamsSchema,
   type WorkforceDecisionResolveParams,
@@ -420,6 +422,8 @@ export const validateWorkforceTickParams =
   ajv.compile<WorkforceTickParams>(WorkforceTickParamsSchema);
 export const validateWorkforceAppfolioWritebackParams =
   ajv.compile<WorkforceAppfolioWritebackParams>(WorkforceAppfolioWritebackParamsSchema);
+export const validateWorkforceAppfolioReportsProbeParams =
+  ajv.compile<WorkforceAppfolioReportsProbeParams>(WorkforceAppfolioReportsProbeParamsSchema);
 export const validateWebLoginStartParams =
   ajv.compile<WebLoginStartParams>(WebLoginStartParamsSchema);
 export const validateWebLoginWaitParams = ajv.compile<WebLoginWaitParams>(WebLoginWaitParamsSchema);
@@ -558,6 +562,7 @@ export {
   WorkforceScheduleAddParamsSchema,
   WorkforceSchedulesParamsSchema,
   WorkforceTickParamsSchema,
+  WorkforceAppfolioReportsProbeParamsSchema,
   WorkforceAppfolioWritebackParamsSchema,
   TickEventSchema,
   ShutdownEventSchema,
@@ -677,5 +682,6 @@ export type {
   WorkforceScheduleAddParams,
   WorkforceSchedulesParams,
   WorkforceTickParams,
+  WorkforceAppfolioReportsProbeParams,
   WorkforceAppfolioWritebackParams,
 };

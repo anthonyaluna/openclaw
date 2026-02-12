@@ -256,6 +256,7 @@ describe("createOpenClawCodingTools", () => {
       "canvas",
       "nodes",
       "cron",
+      "workforce",
       "message",
       "gateway",
       "agents_list",
@@ -323,6 +324,7 @@ describe("createOpenClawCodingTools", () => {
     expect(names.has("sessions_send")).toBe(false);
     expect(names.has("sessions_spawn")).toBe(false);
 
+    expect(names.has("workforce")).toBe(true);
     expect(names.has("read")).toBe(true);
     expect(names.has("exec")).toBe(true);
     expect(names.has("process")).toBe(true);
@@ -352,6 +354,7 @@ describe("createOpenClawCodingTools", () => {
     });
     const names = new Set(tools.map((tool) => tool.name));
     expect(names.has("message")).toBe(true);
+    expect(names.has("workforce")).toBe(true);
     expect(names.has("sessions_send")).toBe(true);
     expect(names.has("sessions_spawn")).toBe(false);
     expect(names.has("exec")).toBe(false);

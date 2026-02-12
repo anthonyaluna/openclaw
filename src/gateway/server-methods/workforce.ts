@@ -1,4 +1,5 @@
 import type { GatewayRequestHandlers } from "./types.js";
+import { probeAppfolioReportsAccess } from "../../infra/appfolio-reports.js";
 import {
   addWorkforceSchedule,
   executeWorkforceAction,
@@ -19,6 +20,7 @@ import {
   errorShape,
   formatValidationErrors,
   validateWorkforceActionParams,
+  validateWorkforceAppfolioReportsProbeParams,
   validateWorkforceAppfolioWritebackParams,
   validateWorkforceDecisionResolveParams,
   validateWorkforceDecisionsParams,
@@ -367,6 +369,25 @@ export const workforceHandlers: GatewayRequestHandlers = {
         { dropIfSlow: true },
       );
       respond(true, { receipt }, undefined);
+    } catch (err) {
+      respond(false, undefined, errorShape(ErrorCodes.UNAVAILABLE, String(err)));
+    }
+  },
+  "workforce.appfolio.reports.probe": async ({ params, respond }) => {
+    if (!validateWorkforceAppfolioReportsProbeParams(params)) {
+      respond(
+        false,
+        undefined,
+        errorShape(
+          ErrorCodes.INVALID_REQUEST,
+          `invalid workforce.appfolio.reports.probe params: ${formatValidationErrors(validateWorkforceAppfolioReportsProbeParams.errors)}`,
+        ),
+      );
+      return;
+    }
+    try {
+      const result = await probeAppfolioReportsAccess();
+      respond(true, result, undefined);
     } catch (err) {
       respond(false, undefined, errorShape(ErrorCodes.UNAVAILABLE, String(err)));
     }

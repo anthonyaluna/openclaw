@@ -190,8 +190,10 @@ describe("exec tool backgrounding", () => {
   it("does not default to elevated when not allowed", async () => {
     const customBash = createExecTool({
       elevated: { enabled: true, allowed: false, defaultLevel: "on" },
-      backgroundMs: 1000,
-      timeoutSec: 5,
+      // Under heavy parallel test load, spawning the shell can exceed 1s on Windows.
+      // Keep this high so we don't accidentally yield a background session for a trivial command.
+      backgroundMs: 10_000,
+      timeoutSec: 15,
     });
 
     const result = await customBash.execute("call1", {

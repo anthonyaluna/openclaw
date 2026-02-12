@@ -16,8 +16,10 @@ Mission Control provides a top-level read of:
 
 - gateway online/offline state
 - pending decision count
-- recent activity velocity
+- schedule lag indicators
 - autonomy mode distribution across roster seats
+- policy outcomes for recent runs (`allow`, `block`, `escalate`)
+- risk distribution for recent runs (`low`, `medium`, `high`)
 
 ## Scope
 

@@ -131,6 +131,7 @@ import type {
 } from "./wizard.js";
 import type {
   WorkforceActionParamsSchema,
+  WorkforceAppfolioReportsProbeParamsSchema,
   WorkforceAppfolioWritebackParamsSchema,
   WorkforceDecisionResolveParamsSchema,
   WorkforceDecisionsParamsSchema,
@@ -265,6 +266,9 @@ export type WorkforceSchedulesParams = Static<typeof WorkforceSchedulesParamsSch
 export type WorkforceTickParams = Static<typeof WorkforceTickParamsSchema>;
 export type WorkforceAppfolioWritebackParams = Static<
   typeof WorkforceAppfolioWritebackParamsSchema
+>;
+export type WorkforceAppfolioReportsProbeParams = Static<
+  typeof WorkforceAppfolioReportsProbeParamsSchema
 >;
 export type TickEvent = Static<typeof TickEventSchema>;
 export type ShutdownEvent = Static<typeof ShutdownEventSchema>;

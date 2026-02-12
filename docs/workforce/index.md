@@ -48,6 +48,22 @@ The current implementation includes:
 - Runs is read-only archive and replay initiation.
 - AppFolio Workspace is policy-gated and enforces writeback receipt context for configured actions.
 
+## Rollout checklist
+
+Before production rollout:
+
+1. Ensure gateway runtime paths are aligned for CLI and service installs.
+2. Verify `openclaw gateway status` reports the expected binary and config path.
+3. Set required integration env vars such as `OPENCLAW_M365_WEBHOOK_BASE_URL` when M365 webhook sync is enabled.
+4. Verify Workforce paths and commands:
+   - `/workforce`
+   - `/mission-control`
+   - `/flight-control`
+   - `/runs`
+   - `/appfolio-workspace`
+   - `openclaw workforce status`
+   - `openclaw workforce next-steps`
+
 ## Related pages
 
 - [Navigation map](/workforce/nav-map)

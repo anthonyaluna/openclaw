@@ -29,6 +29,7 @@ This page describes the current CLI behavior. If commands change, update this do
 - [`health`](/cli/health)
 - [`sessions`](/cli/sessions)
 - [`gateway`](/cli/gateway)
+- [`workforce`](/cli/workforce)
 - [`logs`](/cli/logs)
 - [`system`](/cli/system)
 - [`models`](/cli/models)

@@ -17,6 +17,7 @@ Flight Control shows:
 - decision requests and outcomes
 - execution receipts
 - command and host context for reviewed actions
+- hourly timeline buckets for decision volume and resolution rate
 
 ## Scope
 

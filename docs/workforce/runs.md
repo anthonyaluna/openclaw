@@ -29,6 +29,7 @@ Each run envelope includes normalized fields such as:
 - inspect recent run history
 - open replay flow for specific runs
 - correlate runs with decisions and receipts
+- inspect hourly timeline buckets for total, blocked, and escalated runs
 
 ## Related
 

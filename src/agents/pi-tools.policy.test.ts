@@ -1,6 +1,10 @@
 import type { AgentTool, AgentToolResult } from "@mariozechner/pi-agent-core";
 import { describe, expect, it } from "vitest";
-import { filterToolsByPolicy, isToolAllowedByPolicyName } from "./pi-tools.policy.js";
+import {
+  filterToolsByPolicy,
+  isToolAllowedByPolicyName,
+  resolveSubagentToolPolicy,
+} from "./pi-tools.policy.js";
 
 function createStubTool(name: string): AgentTool<unknown, unknown> {
   return {
@@ -32,5 +36,11 @@ describe("pi-tools.policy", () => {
 
   it("keeps apply_patch when exec is allowlisted", () => {
     expect(isToolAllowedByPolicyName("apply_patch", { allow: ["exec"] })).toBe(true);
+  });
+
+  it("does not deny workforce in default subagent policy", () => {
+    const policy = resolveSubagentToolPolicy();
+    const deny = policy.deny ?? [];
+    expect(deny).not.toContain("workforce");
   });
 });

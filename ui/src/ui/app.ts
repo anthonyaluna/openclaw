@@ -14,6 +14,7 @@ import type {
   AgentsListResult,
   AgentsFilesListResult,
   AgentIdentityResult,
+  AppfolioReportsProbeResult,
   ConfigSnapshot,
   ConfigUiHints,
   CronJob,
@@ -36,6 +37,10 @@ import type {
   WorkforceWorkspace,
 } from "./types.ts";
 import type { NostrProfileFormState } from "./views/channels.nostr-profile-form.ts";
+import {
+  actionForWorkforceAppfolioReportPreset,
+  listWorkforceAppfolioReportPresets,
+} from "../../../src/workforce/appfolio-reports.js";
 import {
   handleChannelConfigReload as handleChannelConfigReloadInternal,
   handleChannelConfigSave as handleChannelConfigSaveInternal,
@@ -88,6 +93,7 @@ import { loadAssistantIdentity as loadAssistantIdentityInternal } from "./contro
 import {
   addWorkforceSchedule,
   executeWorkforceAction,
+  probeWorkforceAppfolioReports,
   recordWorkforceWriteback,
   replayWorkforceRun,
   resolveWorkforceDecision,
@@ -164,6 +170,8 @@ export class OpenClawApp extends LitElement {
   @state() workforceReceipts: WorkforceReceipt[] = [];
   @state() workforceReplayframes: WorkforceReplayFrame[] = [];
   @state() workforceWorkspace: WorkforceWorkspace | null = null;
+  @state() workforceAppfolioProbeLoading = false;
+  @state() workforceAppfolioProbeResult: AppfolioReportsProbeResult | null = null;
   @state() workforceLastWritebackReceiptId: string | null = null;
   @state() workforceSelectedSeatId = "ops-lead";
   // Sidebar state for tool output viewing
@@ -563,6 +571,10 @@ export class OpenClawApp extends LitElement {
     this.workforceLastWritebackReceiptId = receipt?.receiptId ?? null;
   }
 
+  async handleWorkforceAppfolioProbe() {
+    await probeWorkforceAppfolioReports(this as unknown as WorkforceState);
+  }
+
   handleWorkforceSelectSeat(seatId: string) {
     this.workforceSelectedSeatId = seatId;
   }
@@ -573,7 +585,7 @@ export class OpenClawApp extends LitElement {
     options?: { requireWritebackReceipt?: boolean; payload?: Record<string, unknown> },
   ) {
     const requiresWriteback =
-      options?.requireWritebackReceipt ?? action.toLowerCase().includes("appfolio");
+      options?.requireWritebackReceipt ?? action.toLowerCase().startsWith("appfolio.comms.");
     let payload: Record<string, unknown> | undefined =
       options?.payload ??
       (this.workforceLastWritebackReceiptId
@@ -606,6 +618,42 @@ export class OpenClawApp extends LitElement {
       actor: "control-ui",
       requireWritebackReceipt: requiresWriteback,
       payload,
+    });
+  }
+
+  async handleWorkforceInstallReportSchedules() {
+    const presets = listWorkforceAppfolioReportPresets();
+    const existingActions = new Set(
+      (this.workforceStatus?.schedules ?? []).map((schedule) => schedule.action),
+    );
+    for (const preset of presets) {
+      const action = actionForWorkforceAppfolioReportPreset(preset.id);
+      if (existingActions.has(action)) {
+        continue;
+      }
+      await addWorkforceSchedule(this as unknown as WorkforceState, {
+        seatId: preset.seatId,
+        name: `AppFolio ${preset.label}`,
+        intervalMs: preset.defaultIntervalMs,
+        action,
+      });
+      existingActions.add(action);
+    }
+  }
+
+  async handleWorkforceInstallSmartBillDailySchedule() {
+    const action = "appfolio.workflow.run:smart_bill_daily";
+    const existingActions = new Set(
+      (this.workforceStatus?.schedules ?? []).map((schedule) => schedule.action),
+    );
+    if (existingActions.has(action)) {
+      return;
+    }
+    await addWorkforceSchedule(this as unknown as WorkforceState, {
+      seatId: "queue-manager",
+      name: "Smart Bill daily (API)",
+      intervalMs: 24 * 60 * 60 * 1000,
+      action,
     });
   }
 

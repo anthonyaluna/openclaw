@@ -13,6 +13,7 @@ import type {
   AgentsListResult,
   AgentsFilesListResult,
   AgentIdentityResult,
+  AppfolioReportsProbeResult,
   ChannelsStatusSnapshot,
   ConfigSnapshot,
   ConfigUiHints,
@@ -86,6 +87,8 @@ export type AppViewState = {
   workforceReceipts: WorkforceReceipt[];
   workforceReplayframes: WorkforceReplayFrame[];
   workforceWorkspace: WorkforceWorkspace | null;
+  workforceAppfolioProbeLoading: boolean;
+  workforceAppfolioProbeResult: AppfolioReportsProbeResult | null;
   workforceLastWritebackReceiptId: string | null;
   workforceSelectedSeatId: string;
   sidebarOpen: boolean;
@@ -270,12 +273,15 @@ export type AppViewState = {
   handleWorkforceRunReplay: (runId: string) => Promise<void>;
   handleWorkforceTick: () => Promise<void>;
   handleWorkforceRecordWriteback: (note?: string) => Promise<void>;
+  handleWorkforceAppfolioProbe: () => Promise<void>;
   handleWorkforceSelectSeat: (seatId: string) => void;
   handleWorkforceActionExecute: (
     seatId: string,
     action: string,
     options?: { requireWritebackReceipt?: boolean; payload?: Record<string, unknown> },
   ) => Promise<void>;
+  handleWorkforceInstallReportSchedules: () => Promise<void>;
+  handleWorkforceInstallSmartBillDailySchedule: () => Promise<void>;
   handleWorkforceScheduleAdd: (
     seatId: string,
     name: string,

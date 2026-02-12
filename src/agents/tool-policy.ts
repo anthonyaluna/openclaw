@@ -42,6 +42,7 @@ export const TOOL_GROUPS: Record<string, string[]> = {
     "canvas",
     "nodes",
     "cron",
+    "workforce",
     "message",
     "gateway",
     "agents_list",
@@ -65,7 +66,7 @@ const TOOL_PROFILES: Record<ToolProfileId, ToolProfilePolicy> = {
     allow: ["session_status"],
   },
   coding: {
-    allow: ["group:fs", "group:runtime", "group:sessions", "group:memory", "image"],
+    allow: ["group:fs", "group:runtime", "group:sessions", "group:memory", "image", "workforce"],
   },
   messaging: {
     allow: [
@@ -74,6 +75,7 @@ const TOOL_PROFILES: Record<ToolProfileId, ToolProfilePolicy> = {
       "sessions_history",
       "sessions_send",
       "session_status",
+      "workforce",
     ],
   },
   full: {},

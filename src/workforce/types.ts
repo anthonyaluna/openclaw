@@ -5,6 +5,7 @@ export type WorkforceRunStatus = "queued" | "running" | "ok" | "error" | "blocke
 
 export type WorkforcePolicyDecision = "allow" | "block" | "escalate";
 export type WorkforceGuidancePriority = "high" | "medium" | "low";
+export type WorkforcePolicyProfileId = "balanced" | "strict-change-control" | "autonomous-ops";
 
 export type WorkforceGuidanceStep = {
   id: string;
@@ -94,6 +95,9 @@ export type WorkforceRunEnvelope = {
   seatId: WorkforceSeatId;
   action: string;
   status: WorkforceRunStatus;
+  riskLevel: "low" | "medium" | "high";
+  policyProfile: WorkforcePolicyProfileId;
+  policyDecision: WorkforcePolicyDecision;
   startedAtMs: number;
   endedAtMs?: number;
   summary?: string;
@@ -115,6 +119,7 @@ export type WorkforceWorkspaceState = {
   appfolioWritebackEnforced: boolean;
   defaultChannel: "appfolio";
   commsRules: string[];
+  policyProfile: WorkforcePolicyProfileId;
 };
 
 export type WorkforceStoreFile = {
@@ -153,6 +158,17 @@ export type WorkforceStatus = {
       manual: number;
     };
     queuesPressured: number;
+    schedulesLagging: number;
+    policyDecisions: {
+      allow: number;
+      block: number;
+      escalate: number;
+    };
+    riskLevels: {
+      low: number;
+      medium: number;
+      high: number;
+    };
   };
 };
 
@@ -165,10 +181,27 @@ export type WorkforceActionInput = {
   requireWritebackReceipt?: boolean;
 };
 
+export type WorkforceAppfolioReportJobResult = {
+  presetId: string;
+  reportName: string;
+  ok: boolean;
+  status?: number;
+  count?: number | null;
+  pagesFetched?: number;
+  endpoint?: string;
+  nextPageUrl?: string | null;
+  truncated?: boolean;
+  warnings?: string[];
+  validationErrors?: string[];
+  validationWarnings?: string[];
+  error?: string;
+};
+
 export type WorkforceActionResult = {
   policy: WorkforcePolicyDecision;
   run: WorkforceRunEnvelope;
   decision?: WorkforceDecisionCard;
   receipt: WorkforceReceipt;
+  appfolioReport?: WorkforceAppfolioReportJobResult;
   nextSteps: WorkforceGuidanceStep[];
 };

@@ -113,3 +113,8 @@ export const WorkforceAppfolioWritebackParamsSchema = Type.Object(
   },
   { additionalProperties: false },
 );
+
+export const WorkforceAppfolioReportsProbeParamsSchema = Type.Object(
+  {},
+  { additionalProperties: false },
+);

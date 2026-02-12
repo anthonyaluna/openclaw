@@ -814,6 +814,9 @@ export type WorkforceRun = {
   seatId: string;
   action: string;
   status: "queued" | "running" | "ok" | "error" | "blocked" | "escalated";
+  riskLevel: "low" | "medium" | "high";
+  policyProfile: "balanced" | "strict-change-control" | "autonomous-ops";
+  policyDecision: "allow" | "block" | "escalate";
   startedAtMs: number;
   endedAtMs?: number;
   summary?: string;
@@ -865,6 +868,39 @@ export type WorkforceWorkspace = {
   appfolioWritebackEnforced: boolean;
   defaultChannel: "appfolio";
   commsRules: string[];
+  policyProfile: "balanced" | "strict-change-control" | "autonomous-ops";
+};
+
+export type AppfolioReportsProbeResult = {
+  ok: boolean;
+  configured: {
+    authMode: "auto" | "oauth" | "basic";
+    clientId: boolean;
+    clientSecret: boolean;
+    refreshToken: boolean;
+    accessToken: boolean;
+    databaseHost: boolean;
+    databaseBaseUrl: boolean;
+    reportName: boolean;
+    tokenUrl: boolean;
+    apiBaseUrl: boolean;
+  };
+  token: {
+    acquired: boolean;
+    source: "access_token" | "refresh_token" | "client_credentials" | "basic_auth" | "none";
+    tokenType?: string | null;
+    expiresIn?: number | null;
+    scope?: string | null;
+  };
+  reports: {
+    ok: boolean;
+    endpoint?: string;
+    status?: number;
+    count?: number | null;
+    error?: string;
+  };
+  error?: string;
+  warnings: string[];
 };
 
 export type WorkforceGuidanceStep = {
@@ -898,5 +934,16 @@ export type WorkforceStatus = {
       manual: number;
     };
     queuesPressured: number;
+    schedulesLagging: number;
+    policyDecisions: {
+      allow: number;
+      block: number;
+      escalate: number;
+    };
+    riskLevels: {
+      low: number;
+      medium: number;
+      high: number;
+    };
   };
 };

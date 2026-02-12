@@ -86,9 +86,13 @@ export async function openFileWithinRoot(params: {
       throw new SafeOpenError("invalid-path", "not a file");
     }
 
-    const realStat = await fs.stat(realPath);
-    if (stat.ino !== realStat.ino || stat.dev !== realStat.dev) {
-      throw new SafeOpenError("invalid-path", "path mismatch");
+    // On Windows, inode/device are not reliable enough for strict identity checks and can
+    // spuriously differ between `handle.stat()` and `fs.stat()` for the same path.
+    if (process.platform !== "win32") {
+      const realStat = await fs.stat(realPath);
+      if (stat.ino !== realStat.ino || stat.dev !== realStat.dev) {
+        throw new SafeOpenError("invalid-path", "path mismatch");
+      }
     }
 
     return { handle, realPath, stat };

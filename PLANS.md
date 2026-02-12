@@ -59,6 +59,5 @@ This plan has been executed for the baseline Workforce release. The system now i
 
 These are enhancements, not blockers for the baseline:
 
-- richer timeline visualization for receipts and replay
-- expanded analytics widgets for Mission Control
-- optional additional policy profiles beyond current autonomy and writeback gates
+- custom profile authoring and per-seat overrides beyond built-in profiles
+- exportable timeline snapshots for external incident reporting

@@ -138,6 +138,7 @@ import {
 } from "./wizard.js";
 import {
   WorkforceActionParamsSchema,
+  WorkforceAppfolioReportsProbeParamsSchema,
   WorkforceAppfolioWritebackParamsSchema,
   WorkforceDecisionResolveParamsSchema,
   WorkforceDecisionsParamsSchema,
@@ -279,6 +280,7 @@ export const ProtocolSchemas: Record<string, TSchema> = {
   WorkforceSchedulesParams: WorkforceSchedulesParamsSchema,
   WorkforceTickParams: WorkforceTickParamsSchema,
   WorkforceAppfolioWritebackParams: WorkforceAppfolioWritebackParamsSchema,
+  WorkforceAppfolioReportsProbeParams: WorkforceAppfolioReportsProbeParamsSchema,
   TickEvent: TickEventSchema,
   ShutdownEvent: ShutdownEventSchema,
 };

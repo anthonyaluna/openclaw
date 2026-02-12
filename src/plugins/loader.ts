@@ -224,6 +224,8 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
 
   const seenIds = new Map<string, PluginRecord["origin"]>();
   const memorySlot = normalized.slots.memory;
+  const normalizedMemorySlot =
+    typeof memorySlot === "string" ? memorySlot.trim().toLowerCase() : memorySlot;
   const explicitMemorySlotConfigured = Boolean(
     cfg.plugins?.slots && Object.prototype.hasOwnProperty.call(cfg.plugins.slots, "memory"),
   );
@@ -340,14 +342,14 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
     }
     record.kind = definition?.kind ?? record.kind;
 
-    if (record.kind === "memory" && memorySlot === record.id) {
+    if (record.kind === "memory" && normalizedMemorySlot === record.id) {
       memorySlotMatched = true;
     }
 
     const memoryDecision = resolveMemorySlotDecision({
       id: record.id,
       kind: record.kind,
-      slot: memorySlot,
+      slot: normalizedMemorySlot,
       selectedId: selectedMemoryPluginId,
     });
 
@@ -444,13 +446,13 @@ export function loadOpenClawPlugins(options: PluginLoadOptions = {}): PluginRegi
   // but bundled memory plugins are unavailable in the current runtime.
   const shouldWarnMissingExplicitMemorySlot =
     explicitMemorySlotConfigured &&
-    typeof memorySlot === "string" &&
+    typeof normalizedMemorySlot === "string" &&
     !memorySlotMatched &&
-    memorySlot !== "memory-core";
+    normalizedMemorySlot !== "memory-core";
   if (shouldWarnMissingExplicitMemorySlot) {
     registry.diagnostics.push({
       level: "warn",
-      message: `memory slot plugin not found or not marked as memory: ${memorySlot}`,
+      message: `memory slot plugin not found or not marked as memory: ${normalizedMemorySlot}`,
     });
   }
 

@@ -79,6 +79,7 @@ const READ_METHODS = new Set([
   "workforce.decisions",
   "workforce.workspace",
   "workforce.schedules",
+  "workforce.appfolio.reports.probe",
 ]);
 const WRITE_METHODS = new Set([
   "send",
