@@ -238,14 +238,31 @@ async function createPreflightRoot() {
 
 async function removePathRecursive(target: string) {
   await fs
-    .rm(target, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
+    .rm(toCleanupPath(target), { recursive: true, force: true, maxRetries: 3, retryDelay: 200 })
     .catch(() => {});
+}
+
+function toCleanupPath(target: string) {
+  if (process.platform !== "win32") {
+    return target;
+  }
+  return path.toNamespacedPath(path.resolve(target));
 }
 
 async function repairPreflightCleanup(worktreeDir: string, preflightRoot: string) {
   try {
-    await fs.rm(worktreeDir, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 });
-    await fs.rm(preflightRoot, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 });
+    await fs.rm(toCleanupPath(worktreeDir), {
+      recursive: true,
+      force: true,
+      maxRetries: 3,
+      retryDelay: 200,
+    });
+    await fs.rm(toCleanupPath(preflightRoot), {
+      recursive: true,
+      force: true,
+      maxRetries: 3,
+      retryDelay: 200,
+    });
     return true;
   } catch {
     return false;

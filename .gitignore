@@ -16,6 +16,8 @@ __pycache__/
 .tsbuildinfo
 .pnpm-store
 .worktrees/
+extensions/*/.openclaw-runtime-deps.lock/
+extensions/*/.openclaw-runtime-deps-stage-*/
 .DS_Store
 **/.DS_Store
 ui/src/ui/__screenshots__/
