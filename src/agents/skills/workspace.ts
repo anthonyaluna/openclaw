@@ -13,7 +13,7 @@ import {
   resolveEffectiveAgentSkillsLimits,
 } from "./agent-filter.js";
 import { resolveBundledSkillsDir } from "./bundled-dir.js";
-import { shouldIncludeSkill } from "./config.js";
+import { resolveBundledAllowlist, shouldIncludeSkill } from "./config.js";
 import { normalizeSkillFilter } from "./filter.js";
 import { resolveOpenClawMetadata, resolveSkillInvocationPolicy } from "./frontmatter.js";
 import { loadSkillsFromDirSafe, readSkillFrontmatterSafe } from "./local-loader.js";
@@ -437,24 +437,32 @@ function loadSkillEntries(
     }
 
     const childDirs = listChildDirectories(baseDir);
-    const suspicious = childDirs.length > limits.maxCandidatesPerRoot;
+    const bundledAllowlist =
+      params.source === "openclaw-bundled" ? resolveBundledAllowlist(opts?.config) : undefined;
+    const candidateChildDirs =
+      params.source === "openclaw-bundled" && bundledAllowlist && bundledAllowlist.length > 0
+        ? childDirs.filter((name) => bundledAllowlist.includes(name))
+        : childDirs;
+    const suspicious = candidateChildDirs.length > limits.maxCandidatesPerRoot;
 
     const maxCandidates = Math.max(0, limits.maxSkillsLoadedPerSource);
-    const limitedChildren = childDirs.toSorted().slice(0, maxCandidates);
+    const limitedChildren = candidateChildDirs.toSorted().slice(0, maxCandidates);
 
     if (suspicious) {
       skillsLogger.warn("Skills root looks suspiciously large, truncating discovery.", {
         dir: params.dir,
         baseDir,
-        childDirCount: childDirs.length,
+        childDirCount: candidateChildDirs.length,
+        unfilteredChildDirCount: childDirs.length,
         maxCandidatesPerRoot: limits.maxCandidatesPerRoot,
         maxSkillsLoadedPerSource: limits.maxSkillsLoadedPerSource,
       });
-    } else if (childDirs.length > maxCandidates) {
+    } else if (candidateChildDirs.length > maxCandidates) {
       skillsLogger.warn("Skills root has many entries, truncating discovery.", {
         dir: params.dir,
         baseDir,
-        childDirCount: childDirs.length,
+        childDirCount: candidateChildDirs.length,
+        unfilteredChildDirCount: childDirs.length,
         maxSkillsLoadedPerSource: limits.maxSkillsLoadedPerSource,
       });
     }
