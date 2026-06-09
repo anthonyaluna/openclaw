@@ -1,0 +1,425 @@
+version: 1
+status: approved_registry_draft
+posture:
+  dry_run_default: true
+  no_production_writes: true
+  no_message_sending: true
+  no_public_publishing: true
+  runtime_owner: Aiden Rivera - AI Integrator / Chief of Staff
+  authority_asset_owner: Ava Bennett - Content & Authority
+  strategy_owner: Vivian Hart - Strategy & Intelligence
+  process_accountability_owner: Marcus Pierce - Process Accountability
+
+operating_thesis: >-
+  The operation is the source. The brand is the translation. The tool is the proof.
+
+unique_ability_filter:
+  anthony_role: condition_designer_leadership_multiplier_platform_builder
+  highest_value_work:
+    - explore_complexity
+    - see_patterns
+    - design_clear_paths
+    - clarify_direction
+    - activate_people
+    - empower_others
+  out_of_scope_for_anthony:
+    - default_escalation_endpoint
+    - routine_ops_decisions
+    - inbox_triage
+    - operational_firefighting
+    - routine_client_communication
+    - follow_through_ownership
+
+authority_loop:
+  - observe_operating_truth
+  - name_the_standard
+  - create_the_tool
+  - install_internally
+  - prove_with_evidence
+  - translate_into_authority_asset
+  - improve_the_os
+
+pme_stages:
+  - id: discover_the_plan
+    number: 1
+    name: Discover the Plan
+    purpose: Owner goals, asset profile, pain points, and fit.
+  - id: launch_the_transition
+    number: 2
+    name: Launch the Transition
+    purpose: Documents, team, systems, communication, and expectations.
+  - id: listen_to_the_property
+    number: 3
+    name: Listen to the Property
+    purpose: Inspections, financials, tenant feedback, and risk review.
+  - id: set_the_rhythm
+    number: 4
+    name: Set the Rhythm
+    purpose: Accountability, service standards, reporting, and escalation.
+  - id: activate_the_experience
+    number: 5
+    name: Activate the Experience
+    purpose: Tenant, resident, vendor, and service communication.
+  - id: report_the_reality
+    number: 6
+    name: Report the Reality
+    purpose: Financial visibility, operating truth, and decision support.
+  - id: review_the_performance
+    number: 7
+    name: Review the Performance
+    purpose: Quarterly accountability, priorities, risks, and next actions.
+  - id: protect_the_legacy
+    number: 8
+    name: Protect the Legacy
+    purpose: Long-term asset health, portfolio growth, succession, and generational value.
+
+standards:
+  - id: source_of_truth_discipline
+    name: Source-of-Truth Discipline
+    status: partial_strong_foundation
+    pme_stages:
+      - launch_the_transition
+      - listen_to_the_property
+      - set_the_rhythm
+      - report_the_reality
+    primary_agent: Marcus Pierce
+    supporting_agents:
+      - Aiden Rivera
+      - Quinn Parker
+    source_systems:
+      - AppFolio
+      - Bloom Growth
+      - Whale
+      - SharePoint
+      - Outlook/Teams
+      - HubSpot
+    gate: source_system_read
+    proof_artifacts:
+      - source_proof_packet
+      - runtime_ledger_verification
+      - source_of_truth_audit
+    scorecard_signals:
+      - source_link_present
+      - source_record_id_present
+      - source_facts_verified
+      - review_status_present
+    authority_asset_use: Teach owners and operators why visibility is not the same as control.
+    next_hardening: Add standard card and required field tests.
+    constraints:
+      - no_source_system_replacement
+      - no_unverified_source_facts
+
+  - id: same_day_confidence_standard
+    name: Same-Day Confidence / Same Day Response
+    status: partial
+    pme_stages:
+      - activate_the_experience
+      - set_the_rhythm
+    primary_agent: Sofia Marin
+    supporting_agents:
+      - Maya Brooks
+      - Elena Reed
+      - Marcus Pierce
+    source_systems:
+      - AppFolio
+      - Outlook/Teams
+    gate: external_message
+    proof_artifacts:
+      - documented_acknowledgement
+      - next_step_owner
+      - next_step_date
+      - communication_review_packet
+    scorecard_signals:
+      - same_day_acknowledgement_rate
+      - unanswered_messages
+      - next_step_clarity
+    authority_asset_use: Teach that communication is a control system for trust.
+    next_hardening: Add review-only acknowledgement packet; external sends remain blocked.
+    constraints:
+      - no_external_send_without_approval
+      - no_legal_or_fair_housing_conclusions
+
+  - id: decision_rights_escalation_architecture
+    name: Decision Rights & Escalation Architecture
+    status: encoded
+    pme_stages:
+      - set_the_rhythm
+      - review_the_performance
+    primary_agent: Aiden Rivera
+    supporting_agents:
+      - Marcus Pierce
+      - Riley Morgan
+      - Claire Banks
+      - Maya Brooks
+    source_systems:
+      - Bloom Growth
+      - Teams
+      - AppFolio
+    gate: internal_task
+    proof_artifacts:
+      - decision_routing_review
+      - anthony_dependency_index
+      - hero_moment_review
+    scorecard_signals:
+      - anthony_required_count
+      - recommendation_present
+      - first_owner_present
+      - backup_owner_present
+    authority_asset_use: Teach how leaders create capability by defining ownership.
+    next_hardening: Add tests for required first owner, backup owner, Anthony threshold, and recommendation.
+    constraints:
+      - no_backdoor_escalation_to_anthony
+      - recommendation_required
+
+  - id: work_order_closeout_standard
+    name: Work Order Closeout Standard
+    status: partial
+    pme_stages:
+      - activate_the_experience
+      - review_the_performance
+    primary_agent: Elena Reed
+    supporting_agents:
+      - Maya Brooks
+      - Sofia Marin
+    source_systems:
+      - AppFolio
+      - Whale
+    gate: internal_note
+    proof_artifacts:
+      - maintenance_closeout_qa
+      - tenant_follow_up_record
+      - vendor_documentation_record
+    scorecard_signals:
+      - closeout_time
+      - documentation_compliance
+      - tenant_follow_up_complete
+      - rework_rate
+    authority_asset_use: Teach that maintenance is not complete until trust is closed.
+    next_hardening: Add closeout proof schema and no-close-without-documentation test.
+    constraints:
+      - no_mark_complete_without_documentation
+      - no_habitability_conclusion_by_agent
+
+  - id: property_listening_protocol
+    name: Property Listening Protocol
+    status: partial
+    pme_stages:
+      - listen_to_the_property
+      - review_the_performance
+      - protect_the_legacy
+    primary_agent: Maya Brooks
+    supporting_agents:
+      - Elena Reed
+      - Claire Banks
+      - Sofia Marin
+    source_systems:
+      - AppFolio
+      - SharePoint
+      - Whale
+    gate: source_system_read
+    proof_artifacts:
+      - property_listening_summary
+      - property_health_report
+      - risk_flag_summary
+    scorecard_signals:
+      - inspection_completed
+      - risk_flags_identified
+      - tenant_feedback_summarized
+      - maintenance_patterns_identified
+    authority_asset_use: Teach that properties speak through patterns, records, finances, and experience.
+    next_hardening: Add command output or template for Property Listening Summary.
+    constraints:
+      - no_unverified_property_claims
+      - no_private_resident_details_in_authority_assets
+
+  - id: email_draft_context_pack
+    name: Email Draft Context Pack
+    status: encoded_strong
+    pme_stages:
+      - set_the_rhythm
+      - activate_the_experience
+      - report_the_reality
+      - review_the_performance
+    primary_agent: Riley Morgan
+    supporting_agents:
+      - Ava Bennett
+      - Sofia Marin
+      - Aiden Rivera
+    source_systems:
+      - Outlook/Teams
+      - AppFolio
+      - SharePoint
+      - HubSpot
+    gate: external_message
+    proof_artifacts:
+      - email_draft_context_rows
+      - approval_gate
+      - risk_screen
+      - source_facts_verified
+    scorecard_signals:
+      - context_pack_loaded
+      - missing_context_fields
+      - ready_for_human_review
+      - blocked_external_send
+    authority_asset_use: Protect Anthony voice, Coastline brand, and review-first communications.
+    next_hardening: Add fixtures for missing, ready, and blocked email draft states.
+    constraints:
+      - no_send
+      - no_production_draft_creation
+      - no_owner_commitment
+      - no_legal_or_compliance_conclusion
+
+  - id: owner_reporting_quality_control
+    name: Owner Reporting Quality Control
+    status: partial
+    pme_stages:
+      - report_the_reality
+      - review_the_performance
+    primary_agent: Claire Banks
+    supporting_agents:
+      - Maya Brooks
+      - Sofia Marin
+    source_systems:
+      - AppFolio
+      - SharePoint
+    gate: source_system_read
+    proof_artifacts:
+      - reporting_qc_packet
+      - monthly_owner_report_review
+      - exception_explanation_log
+    scorecard_signals:
+      - reports_on_time
+      - exceptions_explained
+      - owner_questions_resolved
+      - corrections_minimized
+    authority_asset_use: Teach that reporting must translate reality, not just send statements.
+    next_hardening: Add PME Monthly Owner Report QC standard and tests.
+    constraints:
+      - no_unexplained_exceptions
+      - no_financial_conclusion_without_source_facts
+
+  - id: vendor_partner_standard
+    name: Vendor Partner Standard
+    status: partial
+    pme_stages:
+      - activate_the_experience
+      - review_the_performance
+      - protect_the_legacy
+    primary_agent: Elena Reed
+    supporting_agents:
+      - Marcus Pierce
+      - Maya Brooks
+    source_systems:
+      - AppFolio
+      - Whale
+      - SharePoint
+    gate: internal_task
+    proof_artifacts:
+      - vendor_instruction_review
+      - vendor_scorecard
+      - vendor_compliance_file
+    scorecard_signals:
+      - vendor_compliance
+      - documentation_quality
+      - response_time
+      - rework_rate
+      - cost_reasonableness
+    authority_asset_use: Teach that vendors are operating partners, not transactions.
+    next_hardening: Add vendor partner scorecard artifact and compliance test.
+    constraints:
+      - no_vendor_contract_commitment_by_agent
+      - no_quote_acceptance_by_agent
+
+  - id: pme_values_proof
+    name: PME Values Proof
+    status: missing_registry_needed
+    pme_stages:
+      - all
+    primary_agent: Marcus Pierce
+    supporting_agents:
+      - Ava Bennett
+      - Aiden Rivera
+      - Maya Brooks
+      - Sofia Marin
+    source_systems:
+      - AppFolio
+      - Whale
+      - Bloom Growth
+      - SharePoint
+    gate: source_system_read
+    proof_artifacts:
+      - pme_values_proof_dashboard
+      - values_story_capture
+      - training_signal
+      - authority_asset_brief
+    scorecard_signals:
+      - values_proof_updated
+      - case_study_captured
+      - process_made_transferable
+      - training_asset_created
+    authority_asset_use: Turn operational proof into PME education, sales clarity, and Standard Setter content.
+    next_hardening: Add values proof generator and no-PII authority asset filter.
+    constraints:
+      - no_client_resident_vendor_pii
+      - no_public_publish_without_human_approval
+
+  - id: hero_moment_filter
+    name: Hero Moment Filter
+    status: partial
+    pme_stages:
+      - set_the_rhythm
+      - review_the_performance
+    primary_agent: Aiden Rivera
+    supporting_agents:
+      - Riley Morgan
+      - Marcus Pierce
+    source_systems:
+      - Bloom Growth
+      - Teams
+      - Outlook/Teams
+    gate: internal_task
+    proof_artifacts:
+      - hero_moment_review
+      - anthony_dependency_index
+      - decision_routing_review
+    scorecard_signals:
+      - protected_hero_moments
+      - anthony_dependency_removed
+      - recurring_escalations_converted_to_system_fixes
+    authority_asset_use: Teach that leadership grows people by protecting their ownership moments.
+    next_hardening: Add planner-aligned hero moment classifier and weekly scorecard row.
+    constraints:
+      - do_not_route_all_uncertainty_to_anthony
+      - coach_delegate_escalate_document
+
+first_supervised_pilot:
+  recommended_lane: hubspot_internal_note_task_candidate
+  reason: >-
+    Lower operational, legal, resident, trust-accounting, and owner-commitment risk than AppFolio.
+    Existing runtime gates already support HubSpot internal note/task simulation.
+  required_before_live:
+    - action_packet
+    - explicit_human_approval
+    - execution_ledger
+    - replay_proof
+    - post_action_verification
+    - rollback_posture
+  prohibited_in_pilot:
+    - external_send
+    - owner_commitment
+    - live_appfolio_write
+    - resident_or_tenant_message
+    - payment_or_trust_action
+    - legal_or_fair_housing_conclusion
+
+next_prs:
+  - title: Tests: validate Standard Setter Authority registry
+    scope: Registry shape, PME stage references, standard ids, owners, gates, constraints.
+  - title: Feature: add PME values proof generator
+    scope: Generate review-only values proof rows and authority asset briefs without publishing.
+  - title: Feature: add Ava authority asset brief lane
+    scope: Convert approved proof into internal/external draft briefs with no-send/no-publish gates.
+  - title: Hardening: paternity autonomy boundary proof
+    scope: No daily check-in verification, exception matrix, Week 2/Week 6 Experience Transformer outputs.
+  - title: Pilot: supervised HubSpot internal note/task gate
+    scope: Move from simulation readiness to controlled supervised pilot only after tests pass.
